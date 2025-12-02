@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lode abad</title>
+    <link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+    <a href="nose.html" class="nav-button">Ir a otra pagina</a>
+    <div class="control-panel">
+        <button class="color-button red-btn" onclick="activatePath('red')">
+            <span class="btn-light"></span>
+            rojo
+        </button>
+        <button class="color-button green-btn" onclick="activatePath('green')">
+            <span class="btn-light"></span>
+            verde
+        </button>
+        <button class="color-button blue-btn" onclick="activatePath('blue')">
+            <span class="btn-light"></span>
+            azul
+        </button>
+        <button class="color-button reset-btn" onclick="resetAll()">
+            <span class="btn-light"></span>
+            reset
+        </button>
+    </div>
+    <div class="container">
+        <svg id="connections-svg">
+            <!-- Camino ROJO: Box1 -> Box2 -> Box4 -> Box5 -> Box1 -->
+            <path id="line-red-1" class="connection-line" data-color="red"/>
+            <path id="line-red-2" class="connection-line" data-color="red"/>
+            <path id="line-red-3" class="connection-line" data-color="red"/>
+            <path id="line-red-4" class="connection-line" data-color="red"/>
+            
+            <!-- Camino VERDE: Box1 -> Box3 -> Box5 -> Box2 -> Box1 -->
+            <path id="line-green-1" class="connection-line" data-color="green"/>
+            <path id="line-green-2" class="connection-line" data-color="green"/>
+            <path id="line-green-3" class="connection-line" data-color="green"/>
+            <path id="line-green-4" class="connection-line" data-color="green"/>
+            
+            <!-- Camino AZUL: Box1 -> Box4 -> Box5 -> Box3 -> Box1 -->
+            <path id="line-blue-1" class="connection-line" data-color="blue"/>
+            <path id="line-blue-2" class="connection-line" data-color="blue"/>
+            <path id="line-blue-3" class="connection-line" data-color="blue"/>
+            <path id="line-blue-4" class="connection-line" data-color="blue"/>
+        </svg>
+
+        <!-- Cuadro 1 -->
+        <div class="box" id="box1">
+            <div class="box-label">U1</div>
+            <div class="box-content"></div>
+            <!-- Puertos de entrada (izquierda) -->
+            <div class="port port-in port-left" style="top: 30%;" data-port="clk">
+                <span class="port-label">CLK</span>
+            </div>
+            <div class="port port-in port-left" style="top: 50%;" data-port="din">
+                <span class="port-label">DIN</span>
+            </div>
+            <div class="port port-in port-left" style="top: 70%;" data-port="reset">
+                <span class="port-label">RESET</span>
+            </div>
+            <!-- Puertos de salida (derecha) -->
+            <div class="port port-out port-right" style="top: 40%;" data-port="dout">
+                <span class="port-label-right">DOUT</span>
+            </div>
+        </div>
+
+        <!-- Cuadro 2 -->
+        <div class="box" id="box2">
+            <div class="box-label">U2</div>
+            <div class="box-content"></div>
+            <div class="port port-in port-left" style="top: 30%;" data-port="clk">
+                <span class="port-label">CLK</span>
+            </div>
+            <div class="port port-in port-left" style="top: 50%;" data-port="din">
+                <span class="port-label">DIN</span>
+            </div>
+            <div class="port port-in port-left" style="top: 70%;" data-port="reset">
+                <span class="port-label">RESET</span>
+            </div>
+            <div class="port port-out port-right" style="top: 40%;" data-port="dout">
+                <span class="port-label-right">DOUT</span>
+            </div>
+        </div>
+
+        <!-- Cuadro 3-->
+        <div class="box" id="box3">
+            <div class="box-label">U3</div>
+            <div class="box-content"></div>
+            <div class="port port-in port-left" style="top: 30%;" data-port="clk">
+                <span class="port-label">CLK</span>
+            </div>
+            <div class="port port-in port-left" style="top: 50%;" data-port="din">
+                <span class="port-label">DIN</span>
+            </div>
+            <div class="port port-in port-left" style="top: 70%;" data-port="reset">
+                <span class="port-label">RESET</span>
+            </div>
+            <div class="port port-out port-right" style="top: 40%;" data-port="dout">
+                <span class="port-label-right">DOUT</span>
+            </div>
+        </div>
+
+        <!-- Cuadro 4-->
+        <div class="box" id="box4">
+            <div class="box-label">U4</div>
+            <div class="box-content"></div>
+            <div class="port port-in port-left" style="top: 25%;" data-port="i0">
+                <span class="port-label">I(0)</span>
+            </div>
+            <div class="port port-in port-left" style="top: 45%;" data-port="i1">
+                <span class="port-label">I(1)</span>
+            </div>
+            <div class="port port-in port-left" style="top: 65%;" data-port="i2">
+                <span class="port-label">I(2)</span>
+            </div>
+            <div class="port port-out port-right" style="top: 35%;" data-port="o0">
+                <span class="port-label-right">I(2:0)</span>
+            </div>
+            <div class="port port-out port-right" style="top: 55%;" data-port="o1">
+                <span class="port-label-right">O(5:0)</span>
+            </div>
+        </div>
+
+        <!-- Cuadro 5 -->
+        <div class="box" id="box5">
+            <div class="box-label">U5</div>
+            <div class="box-content"></div>
+            <div class="port port-in port-left" style="top: 30%;" data-port="clk">
+                <span class="port-label">CLK</span>
+            </div>
+            <div class="port port-in port-left" style="top: 50%;" data-port="din">
+                <span class="port-label">DIN</span>
+            </div>
+            <div class="port port-in port-left" style="top: 70%;" data-port="reset">
+                <span class="port-label">RESET</span>
+            </div>
+            <div class="port port-out port-right" style="top: 40%;" data-port="dout">
+                <span class="port-label-right">DOUT</span>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
