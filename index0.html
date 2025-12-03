@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/estilo1.css">
+    <title>RISC-V Simulator</title>
+</head>
+<body>
+    <div class="header-container">
+        <div class="header-content">
+            <h1 class="title">RISC-V Simulator</h1>
+            <div class="tabs">
+                <button class="tab activa" data-tab="editor">
+                    <span class="tab-icon"></span>Código en Ensamblador
+                </button>
+                <button class="tab" data-tab="simulator" onclick="window.location.href='index.html'">
+                    <span class="tab-icon"></span>Esquemático Procesador
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="tab-view active" id="editor-view">
+            <div class="editor-container">
+                <div class="editor-header">
+                    <div>
+                        <h2 class="editor-title">Editor de Código</h2>
+                    </div>
+                    <div class="editor-actions">
+                        <button class="btn">Limpiar</button>
+                    </div>
+                </div>
+                <div class="Panel">
+                    <div id="linea-contador">1</div>
+                    <textarea class="textarea" id="editor" placeholder="# Escribe tu código en ensamblador RISC-V aquí 
+# Ejemplo: 
+ addi x1, x0, 10 
+ addi x2, x0, 20 
+ add x3, x1, x2" required></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const textarea = document.getElementById('editor');
+        const contador = document.getElementById('linea-contador');
+        const panel = document.querySelector('.Panel');
+
+        function updateLineNumbers() {
+            const lineCount = textarea.value.split('\n').length;
+            let numbers = '';
+            for (let i = 1; i <= lineCount || i === 1; i++) {
+                numbers += i + '\n';
+            }
+            contador.textContent = numbers.trim(); 
+        }
+
+        textarea.addEventListener('scroll', () => {
+            contador.scrollTop = textarea.scrollTop; 
+        });
+
+        textarea.addEventListener('input', updateLineNumbers);
+        updateLineNumbers();
+    </script>
+</body>
+</html>
+
