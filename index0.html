@@ -43,12 +43,13 @@
             </div>
         </div>
     </div>
+    
 
     <script>
         const textarea = document.getElementById('editor');
         const contador = document.getElementById('linea-contador');
         const panel = document.querySelector('.Panel');
-
+    
         function updateLineNumbers() {
             const lineCount = textarea.value.split('\n').length;
             let numbers = '';
@@ -57,13 +58,29 @@
             }
             contador.textContent = numbers.trim(); 
         }
-
+    
+        // Guardar código en localStorage
+        function saveCode() {
+            localStorage.setItem('assemblyCode', textarea.value);
+        }
+    
         textarea.addEventListener('scroll', () => {
             contador.scrollTop = textarea.scrollTop; 
         });
-
-        textarea.addEventListener('input', updateLineNumbers);
+    
+        textarea.addEventListener('input', () => {
+            updateLineNumbers();
+            saveCode(); // Guardar automáticamente al escribir
+        });
+    
         updateLineNumbers();
+        
+        // Cargar código guardado al abrir la página
+        const savedCode = localStorage.getItem('assemblyCode');
+        if (savedCode) {
+            textarea.value = savedCode;
+            updateLineNumbers();
+        }
     </script>
 </body>
 </html>

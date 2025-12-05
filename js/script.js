@@ -1,138 +1,825 @@
-// Configuración de caminos predefinidos para cada color
-const pathConfigurations = {
-    red: {
-        // Camino ROJO: Box1 -> Box2 -> Box5 -> Box4 -> Box1
-        boxes: ['box1', 'box2', 'box5', 'box4', 'box1'],
-        lines: ['line-red-1', 'line-red-2', 'line-red-3', 'line-red-4'],
+const instructionPaths = {
+    R: {
+        color: 'r',
+        components: ['pc', 'sum-pc4', 'mux-pc', 'mem-instr', 'decoder', 'control-unit', 'reg-bank', 'mux-alu', 'alu', 'mux-wb'],
         connections: [
-            { from: 'box1', fromPort: 'dout', to: 'box2', toPort: 'din', offset: 15 },
-            { from: 'box2', fromPort: 'dout', to: 'box5', toPort: 'din', offset: 10 },
-            { from: 'box5', fromPort: 'dout', to: 'box4', toPort: 'i1', offset: -20 },
-            { from: 'box4', fromPort: 'o1', to: 'box1', toPort: 'din', offset: 100 }
+            {
+                from: 'pc', fromPort: 'pc_out',
+                to: 'sum-pc4', toPort: 'pc_in',
+                waypoints: []
+            },
+            {
+                from: 'sum-pc4', fromPort: 'pc4_out',
+                to: 'mux-pc', toPort: 'pc_normal',
+                waypoints: [
+                    { x: 360, y: 90 },
+                    { x: 360, y: 30 },
+                    { x: 985, y: 30 },
+                    { x: 985, y: 40 }
+                ]
+            },
+            {
+                from: 'pc', fromPort: 'pc_out',
+                to: 'mem-instr', toPort: 'address',
+                waypoints: [
+                    { x: 160, y: 90 },
+                    { x: 160, y: 160 },
+                    { x: 30, y: 160 },
+                    { x: 30, y: 210 },
+                    { x: 195, y: 210 }
+                ]
+            },
+            {
+                from: 'mem-instr', fromPort: 'instr_out',
+                to: 'decoder', toPort: 'instr_in',
+                waypoints: [
+                    { x: 280, y: 270 },
+                    { x: 360, y: 270 }
+                ]
+            },
+            {
+                from: 'decoder', fromPort: 'imm_out',
+                to: 'control-unit', toPort: 'opcode_in',
+                waypoints: [
+                    { x: 520, y: 280 },
+                    { x: 560, y: 280 },
+                    { x: 560, y: 150 },
+                    { x: 510, y: 150 }
+                ]
+            },
+            {
+                from: 'decoder', fromPort: 'rs1_out',
+                to: 'reg-bank', toPort: 'rs1_addr',
+                waypoints: [
+                    { x: 405, y: 360 },
+                    { x: 405, y: 380 },
+                    { x: 60, y: 380 },
+                    { x: 60, y: 420 },
+                    { x: 95, y: 420 }
+                ]
+            },
+            {
+                from: 'decoder', fromPort: 'rs2_out',
+                to: 'reg-bank', toPort: 'rs2_addr',
+                waypoints: [
+                    { x: 440, y: 360 },
+                    { x: 440, y: 370 },
+                    { x: 45, y: 370 },
+                    { x: 45, y: 420 },
+                    { x: 155, y: 420 }
+                ]
+            },
+            {
+                from: 'reg-bank', fromPort: 'rs1_data',
+                to: 'alu', toPort: 'op1',
+                waypoints: [
+                    { x: 210, y: 479 },
+                    { x: 230, y: 479 },
+                    { x: 230, y: 600 },
+                    { x: 460, y: 600 },
+                    { x: 460, y: 472 },
+                    { x: 480, y: 472 }
+                ]
+            },
+            {
+                from: 'reg-bank', fromPort: 'rs2_data',
+                to: 'mux-alu', toPort: 'mux_rs2',
+                waypoints: [
+                    { x: 210, y: 521 },
+                    { x: 280, y: 521 },
+                    { x: 280, y: 482 },
+                    { x: 310, y: 482 }
+                ]
+            },
+            {
+                from: 'mux-alu', fromPort: 'mux_out',
+                to: 'alu', toPort: 'op2',
+                waypoints: [
+                    { x: 410, y: 495 },
+                    { x: 440, y: 495 },
+                    { x: 440, y: 508 },
+                    { x: 480, y: 508 }
+                ]
+            },
+            {
+                from: 'alu', fromPort: 'alu_result',
+                to: 'mux-wb', toPort: 'wb_alu',
+                waypoints: [
+                    { x: 660, y: 490 },
+                    { x: 700, y: 490 },
+                    { x: 700, y: 420 },
+                    { x: 930, y: 420 },
+                    { x: 930, y: 486 },
+                    { x: 950, y: 486 }
+                ]
+            },
+            {
+                from: 'mux-wb', fromPort: 'wb_out',
+                to: 'reg-bank', toPort: 'wr_data',
+                waypoints: [
+                    { x: 1000, y: 550 },
+                    { x: 1000, y: 700 },
+                    { x: 15, y: 700 },
+                    { x: 15, y: 580 },
+                    { x: 125, y: 580 }
+                ]
+            },
+            {
+                from: 'mux-pc', fromPort: 'pc_next',
+                to: 'pc', toPort: 'pc_in',
+                waypoints: [
+                    { x: 985, y: 140 },
+                    { x: 985, y: 160 },
+                    { x: 1080, y: 160 },
+                    { x: 1080, y: 660 },
+                    { x: 10, y: 660 },
+                    { x: 10, y: 140 },
+                    { x: 100, y: 140 }
+                ]
+            }
         ]
     },
-    green: {
-        // Camino VERDE: Box1 -> Box3 -> Box2 -> Box5 -> Box1
-        boxes: ['box1', 'box3', 'box2', 'box5', 'box1'],
-        lines: ['line-green-1', 'line-green-2', 'line-green-3', 'line-green-4'],
+
+    I: {
+        color: 'i',
+        components: ['pc', 'sum-pc4', 'mux-pc', 'mem-instr', 'decoder', 'control-unit', 'sign-ext', 'reg-bank', 'mux-alu', 'alu', 'mux-wb'],
         connections: [
-            { from: 'box1', fromPort: 'dout', to: 'box3', toPort: 'clk', offset: -50 },
-            { from: 'box3', fromPort: 'dout', to: 'box2', toPort: 'clk', offset: -30 },
-            { from: 'box2', fromPort: 'dout', to: 'box5', toPort: 'clk', offset: -10 },
-            { from: 'box5', fromPort: 'dout', to: 'box1', toPort: 'clk', offset: 120 }
+            {
+                from: 'pc', fromPort: 'pc_out',
+                to: 'sum-pc4', toPort: 'pc_in',
+                waypoints: []
+            },
+            {
+                from: 'sum-pc4', fromPort: 'pc4_out',
+                to: 'mux-pc', toPort: 'pc_normal',
+                waypoints: [
+                    { x: 360, y: 90 },
+                    { x: 360, y: 30 },
+                    { x: 985, y: 30 },
+                    { x: 985, y: 40 }
+                ]
+            },
+            {
+                from: 'pc', fromPort: 'pc_out',
+                to: 'mem-instr', toPort: 'address',
+                waypoints: [
+                    { x: 160, y: 90 },
+                    { x: 160, y: 160 },
+                    { x: 30, y: 160 },
+                    { x: 30, y: 210 },
+                    { x: 195, y: 210 }
+                ]
+            },
+            {
+                from: 'mem-instr', fromPort: 'instr_out',
+                to: 'decoder', toPort: 'instr_in',
+                waypoints: [
+                    { x: 280, y: 270 },
+                    { x: 360, y: 270 }
+                ]
+            },
+            {
+                from: 'decoder', fromPort: 'rs1_out',
+                to: 'reg-bank', toPort: 'rs1_addr',
+                waypoints: [
+                    { x: 405, y: 360 },
+                    { x: 405, y: 380 },
+                    { x: 60, y: 380 },
+                    { x: 60, y: 420 },
+                    { x: 95, y: 420 }
+                ]
+            },
+            {
+                from: 'decoder', fromPort: 'imm_out',
+                to: 'control-unit', toPort: 'opcode_in',
+                waypoints: [
+                    { x: 520, y: 280 },
+                    { x: 560, y: 280 },
+                    { x: 560, y: 150 },
+                    { x: 510, y: 150 }
+                ]
+            },
+            {
+                from: 'decoder', fromPort: 'imm_out',
+                to: 'sign-ext', toPort: 'imm_in',
+                waypoints: [
+                    { x: 520, y: 280 },
+                    { x: 610, y: 280 }
+                ]
+            },
+            {
+                from: 'reg-bank', fromPort: 'rs1_data',
+                to: 'alu', toPort: 'op1',
+                waypoints: [
+                    { x: 210, y: 479 },
+                    { x: 230, y: 479 },
+                    { x: 230, y: 600 },
+                    { x: 460, y: 600 },
+                    { x: 460, y: 472 },
+                    { x: 480, y: 472 }
+                ]
+            },
+            {
+                from: 'sign-ext', fromPort: 'imm_ext',
+                to: 'mux-alu', toPort: 'mux_imm',
+                waypoints: [
+                    { x: 685, y: 320 },
+                    { x: 685, y: 360 },
+                    { x: 360, y: 360 },
+                    { x: 360, y: 440 }
+                ]
+            },
+            {
+                from: 'mux-alu', fromPort: 'mux_out',
+                to: 'alu', toPort: 'op2',
+                waypoints: [
+                    { x: 410, y: 495 },
+                    { x: 440, y: 495 },
+                    { x: 440, y: 508 },
+                    { x: 480, y: 508 }
+                ]
+            },
+            {
+                from: 'alu', fromPort: 'alu_result',
+                to: 'mux-wb', toPort: 'wb_alu',
+                waypoints: [
+                    { x: 660, y: 490 },
+                    { x: 700, y: 490 },
+                    { x: 700, y: 420 },
+                    { x: 930, y: 420 },
+                    { x: 930, y: 486 },
+                    { x: 950, y: 486 }
+                ]
+            },
+            {
+                from: 'mux-wb', fromPort: 'wb_out',
+                to: 'reg-bank', toPort: 'wr_data',
+                waypoints: [
+                    { x: 1000, y: 550 },
+                    { x: 1000, y: 700 },
+                    { x: 15, y: 700 },
+                    { x: 15, y: 580 },
+                    { x: 125, y: 580 }
+                ]
+            },
+            {
+                from: 'mux-pc', fromPort: 'pc_next',
+                to: 'pc', toPort: 'pc_in',
+                waypoints: [
+                    { x: 985, y: 140 },
+                    { x: 985, y: 160 },
+                    { x: 1080, y: 160 },
+                    { x: 1080, y: 660 },
+                    { x: 10, y: 660 },
+                    { x: 10, y: 140 },
+                    { x: 100, y: 140 }
+                ]
+            }
         ]
     },
-    blue: {
-        // Camino AZUL: Box1 -> Box4 -> Box5 -> Box3 -> Box1
-        boxes: ['box1', 'box4', 'box5', 'box3', 'box1'],
-        lines: ['line-blue-1', 'line-blue-2', 'line-blue-3', 'line-blue-4'],
+
+    L: {
+        color: 'l',
+        components: ['pc', 'sum-pc4', 'mux-pc', 'mem-instr', 'decoder', 'control-unit', 'sign-ext', 'reg-bank', 'mux-alu', 'alu', 'mem-data', 'mux-wb'],
         connections: [
-            { from: 'box1', fromPort: 'dout', to: 'box4', toPort: 'i0', offset: 40 },
-            { from: 'box4', fromPort: 'o0', to: 'box5', toPort: 'reset', offset: 5 },
-            { from: 'box5', fromPort: 'dout', to: 'box3', toPort: 'reset', offset: -60 },
-            { from: 'box3', fromPort: 'dout', to: 'box1', toPort: 'reset', offset: -80 }
+            {
+                from: 'pc', fromPort: 'pc_out',
+                to: 'sum-pc4', toPort: 'pc_in',
+                waypoints: []
+            },
+            {
+                from: 'sum-pc4', fromPort: 'pc4_out',
+                to: 'mux-pc', toPort: 'pc_normal',
+                waypoints: [
+                    { x: 360, y: 90 },
+                    { x: 360, y: 30 },
+                    { x: 985, y: 30 },
+                    { x: 985, y: 40 }
+                ]
+            },
+            {
+                from: 'pc', fromPort: 'pc_out',
+                to: 'mem-instr', toPort: 'address',
+                waypoints: [
+                    { x: 160, y: 90 },
+                    { x: 160, y: 160 },
+                    { x: 30, y: 160 },
+                    { x: 30, y: 210 },
+                    { x: 195, y: 210 }
+                ]
+            },
+            {
+                from: 'mem-instr', fromPort: 'instr_out',
+                to: 'decoder', toPort: 'instr_in',
+                waypoints: [
+                    { x: 280, y: 270 },
+                    { x: 360, y: 270 }
+                ]
+            },
+            {
+                from: 'decoder', fromPort: 'rs1_out',
+                to: 'reg-bank', toPort: 'rs1_addr',
+                waypoints: [
+                    { x: 405, y: 360 },
+                    { x: 405, y: 380 },
+                    { x: 60, y: 380 },
+                    { x: 60, y: 420 },
+                    { x: 95, y: 420 }
+                ]
+            },
+            {
+                from: 'decoder', fromPort: 'imm_out',
+                to: 'control-unit', toPort: 'opcode_in',
+                waypoints: [
+                    { x: 520, y: 280 },
+                    { x: 560, y: 280 },
+                    { x: 560, y: 150 },
+                    { x: 510, y: 150 }
+                ]
+            },
+            {
+                from: 'decoder', fromPort: 'imm_out',
+                to: 'sign-ext', toPort: 'imm_in',
+                waypoints: [
+                    { x: 520, y: 280 },
+                    { x: 610, y: 280 }
+                ]
+            },
+            {
+                from: 'reg-bank', fromPort: 'rs1_data',
+                to: 'alu', toPort: 'op1',
+                waypoints: [
+                    { x: 210, y: 479 },
+                    { x: 230, y: 479 },
+                    { x: 230, y: 600 },
+                    { x: 460, y: 600 },
+                    { x: 460, y: 472 },
+                    { x: 480, y: 472 }
+                ]
+            },
+            {
+                from: 'sign-ext', fromPort: 'imm_ext',
+                to: 'mux-alu', toPort: 'mux_imm',
+                waypoints: [
+                    { x: 685, y: 320 },
+                    { x: 685, y: 360 },
+                    { x: 360, y: 360 },
+                    { x: 360, y: 440 }
+                ]
+            },
+            {
+                from: 'mux-alu', fromPort: 'mux_out',
+                to: 'alu', toPort: 'op2',
+                waypoints: [
+                    { x: 410, y: 495 },
+                    { x: 440, y: 495 },
+                    { x: 440, y: 508 },
+                    { x: 480, y: 508 }
+                ]
+            },
+            {
+                from: 'alu', fromPort: 'alu_result',
+                to: 'mem-data', toPort: 'addr_in',
+                waypoints: [
+                    { x: 660, y: 490 },
+                    { x: 680, y: 490 },
+                    { x: 680, y: 480 },
+                    { x: 730, y: 480 }
+                ]
+            },
+            {
+                from: 'mem-data', fromPort: 'data_out',
+                to: 'mux-wb', toPort: 'wb_mem',
+                waypoints: []
+            },
+            {
+                from: 'mux-wb', fromPort: 'wb_out',
+                to: 'reg-bank', toPort: 'wr_data',
+                waypoints: [
+                    { x: 1000, y: 550 },
+                    { x: 1000, y: 700 },
+                    { x: 15, y: 700 },
+                    { x: 15, y: 580 },
+                    { x: 125, y: 580 }
+                ]
+            },
+            {
+                from: 'mux-pc', fromPort: 'pc_next',
+                to: 'pc', toPort: 'pc_in',
+                waypoints: [
+                    { x: 985, y: 140 },
+                    { x: 985, y: 160 },
+                    { x: 1080, y: 160 },
+                    { x: 1080, y: 660 },
+                    { x: 10, y: 660 },
+                    { x: 10, y: 140 },
+                    { x: 100, y: 140 }
+                ]
+            }
+        ]
+    },
+
+    S: {
+        color: 's',
+        components: ['pc', 'sum-pc4', 'mux-pc', 'mem-instr', 'decoder', 'control-unit', 'sign-ext', 'reg-bank', 'mux-alu', 'alu', 'mem-data'],
+        connections: [
+            {
+                from: 'pc', fromPort: 'pc_out',
+                to: 'sum-pc4', toPort: 'pc_in',
+                waypoints: []
+            },
+            {
+                from: 'sum-pc4', fromPort: 'pc4_out',
+                to: 'mux-pc', toPort: 'pc_normal',
+                waypoints: [
+                    { x: 360, y: 90 },
+                    { x: 360, y: 30 },
+                    { x: 985, y: 30 },
+                    { x: 985, y: 40 }
+                ]
+            },
+            {
+                from: 'pc', fromPort: 'pc_out',
+                to: 'mem-instr', toPort: 'address',
+                waypoints: [
+                    { x: 160, y: 90 },
+                    { x: 160, y: 160 },
+                    { x: 30, y: 160 },
+                    { x: 30, y: 210 },
+                    { x: 195, y: 210 }
+                ]
+            },
+            {
+                from: 'mem-instr', fromPort: 'instr_out',
+                to: 'decoder', toPort: 'instr_in',
+                waypoints: [
+                    { x: 280, y: 270 },
+                    { x: 360, y: 270 }
+                ]
+            },
+            {
+                from: 'decoder', fromPort: 'rs1_out',
+                to: 'reg-bank', toPort: 'rs1_addr',
+                waypoints: [
+                    { x: 405, y: 360 },
+                    { x: 405, y: 380 },
+                    { x: 60, y: 380 },
+                    { x: 60, y: 420 },
+                    { x: 95, y: 420 }
+                ]
+            },
+            {
+                from: 'decoder', fromPort: 'rs2_out',
+                to: 'reg-bank', toPort: 'rs2_addr',
+                waypoints: [
+                    { x: 440, y: 360 },
+                    { x: 440, y: 370 },
+                    { x: 45, y: 370 },
+                    { x: 45, y: 420 },
+                    { x: 155, y: 420 }
+                ]
+            },
+            {
+                from: 'decoder', fromPort: 'imm_out',
+                to: 'control-unit', toPort: 'opcode_in',
+                waypoints: [
+                    { x: 520, y: 280 },
+                    { x: 560, y: 280 },
+                    { x: 560, y: 150 },
+                    { x: 510, y: 150 }
+                ]
+            },
+            {
+                from: 'decoder', fromPort: 'imm_out',
+                to: 'sign-ext', toPort: 'imm_in',
+                waypoints: [
+                    { x: 520, y: 280 },
+                    { x: 610, y: 280 }
+                ]
+            },
+            {
+                from: 'reg-bank', fromPort: 'rs1_data',
+                to: 'alu', toPort: 'op1',
+                waypoints: [
+                    { x: 210, y: 479 },
+                    { x: 230, y: 479 },
+                    { x: 230, y: 600 },
+                    { x: 460, y: 600 },
+                    { x: 460, y: 472 },
+                    { x: 480, y: 472 }
+                ]
+            },
+            {
+                from: 'sign-ext', fromPort: 'imm_ext',
+                to: 'mux-alu', toPort: 'mux_imm',
+                waypoints: [
+                    { x: 685, y: 320 },
+                    { x: 685, y: 360 },
+                    { x: 360, y: 360 },
+                    { x: 360, y: 440 }
+                ]
+            },
+            {
+                from: 'mux-alu', fromPort: 'mux_out',
+                to: 'alu', toPort: 'op2',
+                waypoints: [
+                    { x: 410, y: 495 },
+                    { x: 440, y: 495 },
+                    { x: 440, y: 508 },
+                    { x: 480, y: 508 }
+                ]
+            },
+            {
+                from: 'alu', fromPort: 'alu_result',
+                to: 'mem-data', toPort: 'addr_in',
+                waypoints: [
+                    { x: 660, y: 490 },
+                    { x: 680, y: 490 },
+                    { x: 680, y: 480 },
+                    { x: 730, y: 480 }
+                ]
+            },
+            {
+                from: 'reg-bank', fromPort: 'rs2_data',
+                to: 'mem-data', toPort: 'data_in',
+                waypoints: [
+                    { x: 210, y: 521 },
+                    { x: 240, y: 521 },
+                    { x: 240, y: 680 },
+                    { x: 700, y: 680 },
+                    { x: 700, y: 570 },
+                    { x: 700, y: 470 }
+                ]
+            },
+            {
+                from: 'mux-pc', fromPort: 'pc_next',
+                to: 'pc', toPort: 'pc_in',
+                waypoints: [
+                    { x: 985, y: 140 },
+                    { x: 985, y: 160 },
+                    { x: 1080, y: 160 },
+                    { x: 1080, y: 660 },
+                    { x: 10, y: 660 },
+                    { x: 10, y: 140 },
+                    { x: 100, y: 140 }
+                ]
+            }
+        ]
+    },
+
+    B: {
+        color: 'b',
+        components: ['pc', 'sum-pc4', 'sum-branch', 'mux-pc', 'mem-instr', 'decoder', 'control-unit', 'sign-ext', 'reg-bank', 'mux-alu', 'alu'],
+        connections: [
+            {
+                from: 'pc', fromPort: 'pc_out',
+                to: 'sum-pc4', toPort: 'pc_in',
+                waypoints: []
+            },
+            {
+                from: 'sum-pc4', fromPort: 'pc4_out',
+                to: 'mux-pc', toPort: 'pc_normal',
+                waypoints: [
+                    { x: 360, y: 90 },
+                    { x: 360, y: 30 },
+                    { x: 985, y: 30 },
+                    { x: 985, y: 40 }
+                ]
+            },
+            {
+                from: 'pc', fromPort: 'pc_out',
+                to: 'sum-branch', toPort: 'pc_branch',
+                waypoints: [
+                    { x: 160, y: 90 },
+                    { x: 160, y: 15 },
+                    { x: 710, y: 15 },
+                    { x: 710, y: 90 }
+                ]
+            },
+            {
+                from: 'pc', fromPort: 'pc_out',
+                to: 'mem-instr', toPort: 'address',
+                waypoints: [
+                    { x: 160, y: 90 },
+                    { x: 160, y: 160 },
+                    { x: 30, y: 160 },
+                    { x: 30, y: 210 },
+                    { x: 195, y: 210 }
+                ]
+            },
+            {
+                from: 'mem-instr', fromPort: 'instr_out',
+                to: 'decoder', toPort: 'instr_in',
+                waypoints: [
+                    { x: 280, y: 270 },
+                    { x: 360, y: 270 }
+                ]
+            },
+            {
+                from: 'decoder', fromPort: 'rs1_out',
+                to: 'reg-bank', toPort: 'rs1_addr',
+                waypoints: [
+                    { x: 405, y: 360 },
+                    { x: 405, y: 380 },
+                    { x: 60, y: 380 },
+                    { x: 60, y: 420 },
+                    { x: 95, y: 420 }
+                ]
+            },
+            {
+                from: 'decoder', fromPort: 'rs2_out',
+                to: 'reg-bank', toPort: 'rs2_addr',
+                waypoints: [
+                    { x: 440, y: 360 },
+                    { x: 440, y: 370 },
+                    { x: 45, y: 370 },
+                    { x: 45, y: 420 },
+                    { x: 155, y: 420 }
+                ]
+            },
+            {
+                from: 'decoder', fromPort: 'imm_out',
+                to: 'control-unit', toPort: 'opcode_in',
+                waypoints: [
+                    { x: 520, y: 280 },
+                    { x: 560, y: 280 },
+                    { x: 560, y: 150 },
+                    { x: 510, y: 150 }
+                ]
+            },
+            {
+                from: 'decoder', fromPort: 'imm_out',
+                to: 'sign-ext', toPort: 'imm_in',
+                waypoints: [
+                    { x: 520, y: 280 },
+                    { x: 610, y: 280 }
+                ]
+            },
+            {
+                from: 'reg-bank', fromPort: 'rs1_data',
+                to: 'alu', toPort: 'op1',
+                waypoints: [
+                    { x: 210, y: 479 },
+                    { x: 230, y: 479 },
+                    { x: 230, y: 600 },
+                    { x: 460, y: 600 },
+                    { x: 460, y: 472 },
+                    { x: 480, y: 472 }
+                ]
+            },
+            {
+                from: 'reg-bank', fromPort: 'rs2_data',
+                to: 'mux-alu', toPort: 'mux_rs2',
+                waypoints: [
+                    { x: 210, y: 521 },
+                    { x: 280, y: 521 },
+                    { x: 280, y: 482 },
+                    { x: 310, y: 482 }
+                ]
+            },
+            {
+                from: 'mux-alu', fromPort: 'mux_out',
+                to: 'alu', toPort: 'op2',
+                waypoints: [
+                    { x: 410, y: 495 },
+                    { x: 440, y: 495 },
+                    { x: 440, y: 508 },
+                    { x: 480, y: 508 }
+                ]
+            },
+            {
+                from: 'sign-ext', fromPort: 'imm_ext',
+                to: 'sum-branch', toPort: 'offset_branch',
+                waypoints: [
+                    { x: 685, y: 320 },
+                    { x: 685, y: 340 },
+                    { x: 795, y: 340 },
+                    { x: 795, y: 150 }
+                ]
+            },
+            {
+                from: 'sum-branch', fromPort: 'branch_result',
+                to: 'mux-pc', toPort: 'pc_branch',
+                waypoints: [
+                    { x: 870, y: 90 },
+                    { x: 920, y: 90 }
+                ]
+            },
+            {
+                from: 'mux-pc', fromPort: 'pc_next',
+                to: 'pc', toPort: 'pc_in',
+                waypoints: [
+                    { x: 985, y: 140 },
+                    { x: 985, y: 160 },
+                    { x: 1080, y: 160 },
+                    { x: 1080, y: 660 },
+                    { x: 10, y: 660 },
+                    { x: 10, y: 140 },
+                    { x: 100, y: 140 }
+                ]
+            }
         ]
     }
 };
 
-let activeColor = null;
+let activeInstruction = null;
 let animationTimeout = null;
+let currentConnectionIndex = 0;
 
-// obtiene la salida que quieres
 function getPortPosition(boxId, portName) {
     const box = document.getElementById(boxId);
-    const boxRect = box.getBoundingClientRect();
+    if (!box) return null;
+
+    const container = document.querySelector('.container');
+    const containerRect = container.getBoundingClientRect();
     const port = box.querySelector(`[data-port="${portName}"]`);
-    
+
     if (port) {
         const portRect = port.getBoundingClientRect();
         return {
-            x: portRect.left + portRect.width / 2,
-            y: portRect.top + portRect.height / 2
+            x: portRect.left + portRect.width / 2 - containerRect.left + container.scrollLeft,
+            y: portRect.top + portRect.height / 2 - containerRect.top + container.scrollTop
         };
     }
-    return {
-        x: boxRect.left + boxRect.width / 2,
-        y: boxRect.top + boxRect.height / 2// viene por default en centro de la caja
-    };
+    return null;
 }
 
-// Función para dibujar las conexiones con offset para evitar superposición
-function drawConnections() {
-    Object.keys(pathConfigurations).forEach(color => {
-        const config = pathConfigurations[color];
-        
-        config.connections.forEach((conn, index) => {
-            const from = getPortPosition(conn.from, conn.fromPort);
-            const to = getPortPosition(conn.to, conn.toPort);
-            const lineId = config.lines[index];
-            const offset = conn.offset;
-            const startExtend = from.x + 50;
-            const endExtend = to.x - 50;
-            const midY = (from.y + to.y) / 2 + offset;
-            
-            const path = `M ${from.x} ${from.y} 
-                        L ${startExtend} ${from.y} 
-                        L ${startExtend} ${midY} 
-                        L ${endExtend} ${midY} 
-                        L ${endExtend} ${to.y} 
-                        L ${to.x} ${to.y}`;
-            
-            const lineElement = document.getElementById(lineId);
-            if (lineElement) {
-                lineElement.setAttribute('d', path);
-            }
+function drawConnection(lineId, fromPos, toPos, waypoints) {
+    const line = document.getElementById(lineId);
+    if (!line || !fromPos || !toPos) return;
+
+    let path = `M ${fromPos.x} ${fromPos.y}`;
+    
+    if (waypoints && waypoints.length > 0) {
+        waypoints.forEach(point => {
+            path += ` L ${point.x} ${point.y}`;
         });
-    });
+    }
+    
+    path += ` L ${toPos.x} ${toPos.y}`;
+    
+    line.setAttribute('d', path);
 }
 
-// activaun camino especifico
-function activatePath(color) {
-    // Si ya está activo no hace nada
-    if (activeColor === color) {
-        return;
-    }
+function createConnectionLine(id) {
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    line.setAttribute('id', id);
+    line.setAttribute('class', 'connection-line');
+    document.getElementById('connections-svg').appendChild(line);
+    return line;
+}
+
+function drawAllConnections() {
+    document.querySelectorAll('.connection-line').forEach(line => line.remove());
+}
+
+function activateInstruction(instruction) {
+    if (activeInstruction === instruction) return;
+    
     resetAll();
+    activeInstruction = instruction;
+    currentConnectionIndex = 0;
     
-    activeColor = color;
-    const config = pathConfigurations[color];
+    const config = instructionPaths[instruction];
+    if (!config) return;
     
-    // Activar el botón correspondiente
-    document.querySelector(`.${color}-btn`).classList.add('active');
+    document.querySelectorAll('.instr-button').forEach(btn => {
+        if (btn.classList.contains(`${instruction.toLowerCase()}-btn`)) {
+            btn.classList.add('active');
+        }
+    });
     
-    // Animar el camino secuencialmente
-    animatePathSequence(config, color);
+    animateConnection(config);
 }
 
-function animatePathSequence(config, color) {
-    let step = 0;
-    function animateNextStep() {
-        if (step < config.boxes.length) {
-            // Activar cuadro
-            const boxId = config.boxes[step];
-            const box = document.getElementById(boxId);
-            box.classList.add(`active-${color}`);
-            box.classList.add('pulsing');
-            
-            // Activar puertos
-            const ports = box.querySelectorAll('.port');
-            ports.forEach(port => {
-                port.classList.add(`active-${color}`);
-            });
-            
-            // Activar línea (si no es el último paso)
-            if (step < config.lines.length) {
-                const lineId = config.lines[step];
-                const line = document.getElementById(lineId);
-                line.classList.add(`active-${color}`);
-            }
-            
-            step++;
-            animationTimeout = setTimeout(animateNextStep, 500);
+function animateConnection(config) {
+    if (currentConnectionIndex >= config.connections.length) return;
+    
+    const conn = config.connections[currentConnectionIndex];
+    
+    config.components.forEach(compId => {
+        const box = document.getElementById(compId);
+        if (box) {
+            box.classList.add(`active-${config.color}`);
+            box.querySelectorAll('.port').forEach(p => p.classList.add(`active-${config.color}`));
         }
+    });
+    
+    const lineId = `line-active-${currentConnectionIndex}`;
+    createConnectionLine(lineId);
+    
+    const fromPos = getPortPosition(conn.from, conn.fromPort);
+    const toPos = getPortPosition(conn.to, conn.toPort);
+    
+    if (fromPos && toPos) {
+        drawConnection(lineId, fromPos, toPos, conn.waypoints);
+        
+        const line = document.getElementById(lineId);
+        if (line) line.classList.add(`active-${config.color}`);
     }
     
-    animateNextStep();
+    currentConnectionIndex++;
+    animationTimeout = setTimeout(() => animateConnection(config), 300);
 }
 
 function resetAll() {
@@ -141,54 +828,39 @@ function resetAll() {
         animationTimeout = null;
     }
     
-    activeColor = null;
-    document.querySelectorAll('.color-button').forEach(btn => {
-        btn.classList.remove('active');
-    });
+    activeInstruction = null;
+    currentConnectionIndex = 0;
     
+    document.querySelectorAll('.instr-button').forEach(btn => btn.classList.remove('active'));
     document.querySelectorAll('.box').forEach(box => {
-        box.classList.remove('active-red', 'active-green', 'active-blue', 'pulsing');
-    });
-    
-    document.querySelectorAll('.port').forEach(port => {
-        port.classList.remove('active-red', 'active-green', 'active-blue');
-    });
-    
-    document.querySelectorAll('.connection-line').forEach(line => {
-        line.classList.remove('active-red', 'active-green', 'active-blue');
-    });
-}
-
-// Dibujar conexiones al cargar y al redimensionar
-window.addEventListener('load', () => {
-    drawConnections();
-    
-    // Añadir animación de pulsación inicial a todos los cuadros
-    document.querySelectorAll('.box').forEach(box => {
+        box.classList.remove('active-r', 'active-i', 'active-l', 'active-s', 'active-b');
         box.classList.add('pulsing');
     });
+    document.querySelectorAll('.port').forEach(port => {
+        port.classList.remove('active-r', 'active-i', 'active-l', 'active-s', 'active-b');
+    });
+    document.querySelectorAll('[id^="line-active-"]').forEach(line => line.remove());
+}
+
+function loadCodeFromStorage() {
+    const savedCode = localStorage.getItem('assemblyCode');
+    const codeViewer = document.getElementById('code-viewer');
+    
+    if (savedCode && savedCode.trim() !== '') {
+        const lines = savedCode.split('\n');
+        codeViewer.innerHTML = lines
+            .map(line => `<div class="code-line">${line || '&nbsp;'}</div>`)
+            .join('');
+    } else {
+        codeViewer.innerHTML = '<p class="code-placeholder">No hay código disponible</p>';
+    }
+}
+
+window.addEventListener('resize', drawAllConnections);
+window.addEventListener('load', () => {
+    drawAllConnections();
+    document.querySelectorAll('.box').forEach(box => box.classList.add('pulsing'));
+    loadCodeFromStorage();
 });
 
-window.addEventListener('resize', drawConnections);
-
-// Autoreset despues de completar un camino
-function setupAutoReset() {
-    const originalActivatePath = activatePath;
-    window.activatePath = function(color) {
-        originalActivatePath(color);
-        
-        // Calcular duración total de la animación
-        const config = pathConfigurations[color];
-        const totalDuration = config.boxes.length * 500 + 2000;
-        
-        setTimeout(() => {
-            if (activeColor === color) {
-                resetAll();
-                document.querySelectorAll('.box').forEach(box => {
-                    box.classList.add('pulsing');
-                });
-            }
-        }, totalDuration);
-    };
-}
-setupAutoReset();
+setInterval(loadCodeFromStorage, 1000);
