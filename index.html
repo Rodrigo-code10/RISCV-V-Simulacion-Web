@@ -9,7 +9,7 @@
 <body>
     <div class="header-container">
         <div class="header-content">
-            <h1 class="title">RISC-V Simulator</h1>
+            <h1 class="title">LOVE ABAD</h1>
             <div class="tabs">
                 <button class="tab" data-tab="editor" onclick="window.location.href='index0.html'">
                     <span class="tab-icon"></span>Código en Ensamblador
@@ -22,7 +22,7 @@
     </div>
 
     <div class="main-layout">
-        <!-- Panel izquierdo -->
+        <!-- Panel izquierdo del codigo -->
         <div class="side-panel side-panel-left">
             <div class="code-display">
                 <div class="code-header">
@@ -34,150 +34,151 @@
             </div>
         </div>
 
-        <!-- Área del esquemático -->
-        <div class="container">
-            <svg id="connections-svg"></svg>
+        <div class="main-content">
+            <!-- Área del esquematico broo -->
+            <div class="container">
+                <svg id="connections-svg"></svg>
 
-            <!-- FILA 1: SUPERIOR -->
-            
-            <!-- PC -->
-            <div class="box" id="pc" style="top: 50px; left: 50px; width: 100px; height: 80px;">
-                <div class="box-label">PC</div>
-                <div class="port port-out port-right" data-port="pc_out"></div>
-                <div class="port port-in port-bottom" data-port="pc_in"></div>
+                <!-- FILA 1: SUPERIOR -->
+                
+                <!-- PC -->
+                <div class="box" id="pc" style="top: 50px; left: 50px; width: 100px; height: 80px;">
+                    <div class="box-label">PC</div>
+                    <div class="port port-out port-right" data-port="pc_out"></div>
+                    <div class="port port-in port-bottom" data-port="pc_in"></div>
+                </div>
+
+                <!-- Sumador PC+4 -->
+                <div class="box" id="sum-pc4" style="top: 50px; left: 220px; width: 130px; height: 80px;">
+                    <div class="box-label">Sumador<br>PC+4</div>
+                    <div class="port port-in port-left" data-port="pc_in"></div>
+                    <div class="port port-out port-right" data-port="pc4_out"></div>
+                </div>
+
+                <!-- Unidad Control -->
+                <div class="box" id="control-unit" style="top: 50px; left: 520px; width: 120px; height: 80px;">
+                    <div class="box-label">Unidad<br>Control</div>
+                    <div class="port port-in port-left" data-port="opcode_in"></div>
+                </div>
+
+                <!-- Sumador Branch -->
+                <div class="box" id="sum-branch" style="top: 50px; left: 730px; width: 130px; height: 80px;">
+                    <div class="box-label">Sumador<br>Branch</div>
+                    <div class="port port-in port-left" data-port="pc_branch"></div>
+                    <div class="port port-in port-bottom" data-port="offset_branch"></div>
+                    <div class="port port-out port-right" data-port="branch_result"></div>
+                </div>
+
+                <!-- MUX PC -->
+                <div class="box" id="mux-pc" style="top: 50px; left: 940px; width: 90px; height: 80px;">
+                    <div class="box-label">MUX<br>PC</div>
+                    <div class="port port-in port-top" data-port="pc_normal"></div>
+                    <div class="port port-in port-left" data-port="pc_branch"></div>
+                    <div class="port port-out port-bottom" data-port="pc_next"></div>
+                </div>
+
+                <!-- FILA 2: MEDIA -->
+
+                <!-- Memoria de Instrucciones -->
+                <div class="box" id="mem-instr" style="top: 220px; left: 120px; width: 150px; height: 100px;">
+                    <div class="box-label">Memoria de<br>Instrucciones</div>
+                    <div class="port port-in port-top" data-port="address"></div>
+                    <div class="port port-out port-right" data-port="instr_out"></div>
+                </div>
+
+                <!-- Decodificador -->
+                <div class="box" id="decoder" style="top: 220px; left: 370px; width: 140px; height: 120px;">
+                    <div class="box-label">Decodificador</div>
+                    <div class="port port-in port-left" data-port="instr_in"></div>
+                    <div class="port port-out port-bottom" style="left: 25%;" data-port="rs1_out"></div>
+                    <div class="port port-out port-bottom" style="left: 50%;" data-port="rs2_out"></div>
+                    <div class="port port-out port-right" data-port="imm_out"></div>
+                </div>
+
+                <!-- Extensión de Signo -->
+                <div class="box" id="sign-ext" style="top: 220px; left: 620px; width: 130px; height: 90px;">
+                    <div class="box-label">Extensión<br>de Signo</div>
+                    <div class="port port-in port-left" data-port="imm_in"></div>
+                    <div class="port port-out port-bottom" data-port="imm_ext"></div>
+                </div>
+
+                <!-- FILA 3: INFERIOR -->
+
+                <!-- Banco de Registros -->
+                <div class="box" id="reg-bank" style="top: 430px; left: 50px; width: 150px; height: 140px;">
+                    <div class="box-label">Banco de<br>Registros</div>
+                    <div class="port port-in port-top" style="left: 30%;" data-port="rs1_addr"></div>
+                    <div class="port port-in port-top" style="left: 70%;" data-port="rs2_addr"></div>
+                    <div class="port port-out port-right" style="top: 35%;" data-port="rs1_data"></div>
+                    <div class="port port-out port-right" style="top: 65%;" data-port="rs2_data"></div>
+                    <div class="port port-in port-bottom" data-port="wr_data"></div>
+                </div>
+
+                <!-- MUX ALU -->
+                <div class="box" id="mux-alu" style="top: 450px; left: 320px; width: 80px; height: 90px;">
+                    <div class="box-label">MUX</div>
+                    <div class="port port-in port-left" style="top: 35%;" data-port="mux_rs2"></div>
+                    <div class="port port-in port-top" data-port="mux_imm"></div>
+                    <div class="port port-out port-right" data-port="mux_out"></div>
+                </div>
+
+                <!-- ALU -->
+                <div class="box" id="alu" style="top: 430px; left: 490px; width: 160px; height: 120px;">
+                    <div class="box-label">ALU</div>
+                    <div class="port port-in port-left" style="top: 35%;" data-port="op1"></div>
+                    <div class="port port-in port-left" style="top: 65%;" data-port="op2"></div>
+                    <div class="port port-out port-right" data-port="alu_result"></div>
+                </div>
+
+                <!-- Memoria de Datos -->
+                <div class="box" id="mem-data" style="top: 440px; left: 740px; width: 140px; height: 100px;">
+                    <div class="box-label">Memoria de<br>Datos</div>
+                    <div class="port port-in port-left" style="top: 40%;" data-port="addr_in"></div>
+                    <div class="port port-in port-left" style="top: 70%;" data-port="data_in"></div>
+                    <div class="port port-out port-right" data-port="data_out"></div>
+                </div>
+
+                <!-- MUX WB -->
+                <div class="box" id="mux-wb" style="top: 450px; left: 960px; width: 80px; height: 90px;">
+                    <div class="box-label">MUX<br>WB</div>
+                    <div class="port port-in port-left" style="top: 40%;" data-port="wb_alu"></div>
+                    <div class="port port-in port-left" style="top: 70%;" data-port="wb_mem"></div>
+                    <div class="port port-out port-bottom" data-port="wb_out"></div>
+                </div>
             </div>
 
-            <!-- Sumador PC-->
-            <div class="box" id="sum-pc4" style="top: 50px; left: 220px; width: 130px; height: 80px;">
-                <div class="box-label">Sumador<br>PC+4</div>
-                <div class="port port-in port-left" data-port="pc_in"></div>
-                <div class="port port-out port-right" data-port="pc4_out"></div>
-            </div>
-
-            <!-- Unidad Control -->
-            <div class="box" id="control-unit" style="top: 50px; left: 520px; width: 120px; height: 80px;">
-                <div class="box-label">Unidad<br>Control</div>
-                <div class="port port-in port-left" data-port="opcode_in"></div>
-            </div>
-
-            <!-- Sumador Branch -->
-            <div class="box" id="sum-branch" style="top: 50px; left: 730px; width: 130px; height: 80px;">
-                <div class="box-label">Sumador<br>Branch</div>
-                <div class="port port-in port-left" data-port="pc_branch"></div>
-                <div class="port port-in port-bottom" data-port="offset_branch"></div>
-                <div class="port port-out port-right" data-port="branch_result"></div>
-            </div>
-
-            <!-- MUX PC -->
-            <div class="box" id="mux-pc" style="top: 50px; left: 940px; width: 90px; height: 80px;">
-                <div class="box-label">MUX<br>PC</div>
-                <div class="port port-in port-top" data-port="pc_normal"></div>
-                <div class="port port-in port-left" data-port="pc_branch"></div>
-                <div class="port port-out port-bottom" data-port="pc_next"></div>
-            </div>
-
-            <!-- FILA 2: MEDIA -->
-
-            <!-- Memoria de Instrucciones -->
-            <div class="box" id="mem-instr" style="top: 220px; left: 120px; width: 150px; height: 100px;">
-                <div class="box-label">Memoria de<br>Instrucciones</div>
-                <div class="port port-in port-top" data-port="address"></div>
-                <div class="port port-out port-right" data-port="instr_out"></div>
-            </div>
-
-            <!-- Decodificador -->
-            <div class="box" id="decoder" style="top: 220px; left: 370px; width: 140px; height: 120px;">
-                <div class="box-label">Decodificador</div>
-                <div class="port port-in port-left" data-port="instr_in"></div>
-                <div class="port port-out port-bottom" style="left: 25%;" data-port="rs1_out"></div>
-                <div class="port port-out port-bottom" style="left: 50%;" data-port="rs2_out"></div>
-                <div class="port port-out port-right" data-port="imm_out"></div>
-            </div>
-
-            <!-- Extensión de Signo -->
-            <div class="box" id="sign-ext" style="top: 220px; left: 620px; width: 130px; height: 90px;">
-                <div class="box-label">Extensión<br>de Signo</div>
-                <div class="port port-in port-left" data-port="imm_in"></div>
-                <div class="port port-out port-bottom" data-port="imm_ext"></div>
-            </div>
-
-            <!-- FILA 3: INFERIOR -->
-
-            <!-- Banco de Registros -->
-            <div class="box" id="reg-bank" style="top: 430px; left: 50px; width: 150px; height: 140px;">
-                <div class="box-label">Banco de<br>Registros</div>
-                <div class="port port-in port-top" style="left: 30%;" data-port="rs1_addr"></div>
-                <div class="port port-in port-top" style="left: 70%;" data-port="rs2_addr"></div>
-                <div class="port port-out port-right" style="top: 35%;" data-port="rs1_data"></div>
-                <div class="port port-out port-right" style="top: 65%;" data-port="rs2_data"></div>
-                <div class="port port-in port-bottom" data-port="wr_data"></div>
-            </div>
-
-            <!-- MUX ALU -->
-            <div class="box" id="mux-alu" style="top: 450px; left: 320px; width: 80px; height: 90px;">
-                <div class="box-label">MUX</div>
-                <div class="port port-in port-left" style="top: 35%;" data-port="mux_rs2"></div>
-                <div class="port port-in port-top" data-port="mux_imm"></div>
-                <div class="port port-out port-right" data-port="mux_out"></div>
-            </div>
-
-            <!-- ALU -->
-            <div class="box" id="alu" style="top: 430px; left: 490px; width: 160px; height: 120px;">
-                <div class="box-label">ALU</div>
-                <div class="port port-in port-left" style="top: 35%;" data-port="op1"></div>
-                <div class="port port-in port-left" style="top: 65%;" data-port="op2"></div>
-                <div class="port port-out port-right" data-port="alu_result"></div>
-            </div>
-
-            <!-- Memoria de Datos -->
-            <div class="box" id="mem-data" style="top: 440px; left: 740px; width: 140px; height: 100px;">
-                <div class="box-label">Memoria de<br>Datos</div>
-                <div class="port port-in port-left" style="top: 40%;" data-port="addr_in"></div>
-                <div class="port port-in port-left" style="top: 70%;" data-port="data_in"></div>
-                <div class="port port-out port-right" data-port="data_out"></div>
-            </div>
-
-            <!-- MUX WB -->
-            <div class="box" id="mux-wb" style="top: 450px; left: 960px; width: 80px; height: 90px;">
-                <div class="box-label">MUX<br>WB</div>
-                <div class="port port-in port-left" style="top: 40%;" data-port="wb_alu"></div>
-                <div class="port port-in port-left" style="top: 70%;" data-port="wb_mem"></div>
-                <div class="port port-out port-bottom" data-port="wb_out"></div>
-            </div>
-
-        </div>
-
-        <!-- Panel derecha -->
-        <div class="side-panel side-panel-right">
-            <div class="panel-header">
-                <h3>Tipos de Instrucciones</h3>
-            </div>
-            
-            <div class="instruction-buttons">
-                <button class="instr-button r-btn" onclick="activateInstruction('R')">
-                    <span class="btn-label">TIPO R</span>
-                    <span class="btn-desc">Registros</span>
-                </button>
-                <button class="instr-button i-btn" onclick="activateInstruction('I')">
-                    <span class="btn-label">TIPO I</span>
-                    <span class="btn-desc">Inmediato</span>
-                </button>
-                <button class="instr-button l-btn" onclick="activateInstruction('L')">
-                    <span class="btn-label">TIPO L</span>
-                    <span class="btn-desc">Load</span>
-                </button>
-                <button class="instr-button s-btn" onclick="activateInstruction('S')">
-                    <span class="btn-label">TIPO S</span>
-                    <span class="btn-desc">Store</span>
-                </button>
-                <button class="instr-button b-btn" onclick="activateInstruction('B')">
-                    <span class="btn-label">TIPO B</span>
-                    <span class="btn-desc">Branch</span>
-                </button>
-                <button class="instr-button reset-btn" onclick="resetAll()">
-                    <span class="btn-label">RESET</span>
-                    <span class="btn-desc">Reiniciar</span>
-                </button>
+            <!-- Panel de abajo -->
+            <div class="bottom-panel">
+                <div class="panel-header">
+                    <h3>Tipos de Instrucciones</h3>
+                </div>
+                
+                <div class="instruction-buttons">
+                    <button class="instr-button r-btn" onclick="activateInstruction('R')">
+                        <span class="btn-label">TIPO R</span>
+                        <span class="btn-desc">Registros</span>
+                    </button>
+                    <button class="instr-button i-btn" onclick="activateInstruction('I')">
+                        <span class="btn-label">TIPO I</span>
+                        <span class="btn-desc">Inmediato</span>
+                    </button>
+                    <button class="instr-button l-btn" onclick="activateInstruction('L')">
+                        <span class="btn-label">TIPO L</span>
+                        <span class="btn-desc">Load</span>
+                    </button>
+                    <button class="instr-button s-btn" onclick="activateInstruction('S')">
+                        <span class="btn-label">TIPO S</span>
+                        <span class="btn-desc">Store</span>
+                    </button>
+                    <button class="instr-button b-btn" onclick="activateInstruction('B')">
+                        <span class="btn-label">TIPO B</span>
+                        <span class="btn-desc">Branch</span>
+                    </button>
+                    <button class="instr-button reset-btn" onclick="resetAll()">
+                        <span class="btn-label">RESET</span>
+                        <span class="btn-desc">Reiniciar</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>

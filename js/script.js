@@ -725,6 +725,7 @@ const instructionPaths = {
 let activeInstruction = null;
 let animationTimeout = null;
 let currentConnectionIndex = 0;
+let staticConnectionCounter = 0;
 
 function getPortPosition(boxId, portName) {
     const box = document.getElementById(boxId);
@@ -761,16 +762,32 @@ function drawConnection(lineId, fromPos, toPos, waypoints) {
     line.setAttribute('d', path);
 }
 
-function createConnectionLine(id) {
+function createConnectionLine(id, isStatic = false) {
     const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     line.setAttribute('id', id);
-    line.setAttribute('class', 'connection-line');
+    line.setAttribute('class', isStatic ? 'connection-line static-line' : 'connection-line');
     document.getElementById('connections-svg').appendChild(line);
     return line;
 }
 
-function drawAllConnections() {
-    document.querySelectorAll('.connection-line').forEach(line => line.remove());
+function drawAllStaticConnections() {
+    document.querySelectorAll('.static-line').forEach(line => line.remove());
+    staticConnectionCounter = 0;
+    Object.keys(instructionPaths).forEach(instrType => {
+        const config = instructionPaths[instrType];
+        
+        config.connections.forEach(conn => {
+            const lineId = `static-line-${staticConnectionCounter++}`;
+            createConnectionLine(lineId, true);
+            
+            const fromPos = getPortPosition(conn.from, conn.fromPort);
+            const toPos = getPortPosition(conn.to, conn.toPort);
+            
+            if (fromPos && toPos) {
+                drawConnection(lineId, fromPos, toPos, conn.waypoints);
+            }
+        });
+    });
 }
 
 function activateInstruction(instruction) {
@@ -856,9 +873,12 @@ function loadCodeFromStorage() {
     }
 }
 
-window.addEventListener('resize', drawAllConnections);
+window.addEventListener('resize', () => {
+    drawAllStaticConnections();
+});
+
 window.addEventListener('load', () => {
-    drawAllConnections();
+    drawAllStaticConnections();
     document.querySelectorAll('.box').forEach(box => box.classList.add('pulsing'));
     loadCodeFromStorage();
 });
