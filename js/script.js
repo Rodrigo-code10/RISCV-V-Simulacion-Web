@@ -208,7 +208,8 @@ const instructionPaths = {
                 waypoints: [
                     { x: 150, y: 315 },
                     { x: 155, y: 315 },
-                    { x: 155, y: 350 }
+                    { x: 155, y: 380 },
+                    { x: 125, y: 380 }
                 ]
             },
             // MUX PC -> PC
@@ -216,8 +217,8 @@ const instructionPaths = {
                 from: 'mux-pc', fromPort: 'pc_next',
                 to: 'pc', toPort: 'pc_in',
                 waypoints: [
-                    { x: 125, y: 450 },
-                    { x: 125, y: 490 },
+                    { x: 125, y: 550 },
+                    { x: 10, y: 550 },
                     { x: 10, y: 490 },
                     { x: 10, y: 100 },
                     { x: 40, y: 100 }
@@ -412,7 +413,8 @@ const instructionPaths = {
                 waypoints: [
                     { x: 150, y: 315 },
                     { x: 155, y: 315 },
-                    { x: 155, y: 350 }
+                    { x: 155, y: 380 },
+                    { x: 125, y: 380 }
                 ]
             },
             // MUX PC -> PC
@@ -420,8 +422,8 @@ const instructionPaths = {
                 from: 'mux-pc', fromPort: 'pc_next',
                 to: 'pc', toPort: 'pc_in',
                 waypoints: [
-                    { x: 125, y: 450 },
-                    { x: 125, y: 490 },
+                    { x: 125, y: 550 },
+                    { x: 10, y: 550 },
                     { x: 10, y: 490 },
                     { x: 10, y: 100 },
                     { x: 40, y: 100 }
@@ -639,7 +641,8 @@ const instructionPaths = {
                 waypoints: [
                     { x: 150, y: 315 },
                     { x: 155, y: 315 },
-                    { x: 155, y: 350 }
+                    { x: 155, y: 380 },
+                    { x: 125, y: 380 }
                 ]
             },
             // MUX PC -> PC
@@ -647,8 +650,8 @@ const instructionPaths = {
                 from: 'mux-pc', fromPort: 'pc_next',
                 to: 'pc', toPort: 'pc_in',
                 waypoints: [
-                    { x: 125, y: 450 },
-                    { x: 125, y: 490 },
+                    { x: 125, y: 550 },
+                    { x: 10, y: 550 },
                     { x: 10, y: 490 },
                     { x: 10, y: 100 },
                     { x: 40, y: 100 }
@@ -802,7 +805,8 @@ const instructionPaths = {
                 waypoints: [
                     { x: 150, y: 315 },
                     { x: 155, y: 315 },
-                    { x: 155, y: 350 }
+                    { x: 155, y: 380 },
+                    { x: 125, y: 380 }
                 ]
             },
             // Unidad Control -> MUX d1 (ALUSrc)
@@ -842,8 +846,8 @@ const instructionPaths = {
                 from: 'mux-pc', fromPort: 'pc_next',
                 to: 'pc', toPort: 'pc_in',
                 waypoints: [
-                    { x: 125, y: 450 },
-                    { x: 125, y: 490 },
+                    { x: 125, y: 550 },
+                    { x: 10, y: 550 },
                     { x: 10, y: 490 },
                     { x: 10, y: 100 },
                     { x: 40, y: 100 }
@@ -956,8 +960,8 @@ const instructionPaths = {
                 waypoints: [
                     { x: 240, y: 310 },
                     { x: 240, y: 400 },
-                    { x: 110, y: 400 },
-                    { x: 110, y: 390 }
+                    { x: 125, y: 400 },
+                    { x: 125, y: 410 }
                 ]
             },
             // Decodificador -> Banco Registros (rs2)
@@ -1027,7 +1031,8 @@ const instructionPaths = {
                 waypoints: [
                     { x: 305, y: 340 },
                     { x: 305, y: 400 },
-                    { x: 160, y: 400 }
+                    { x: 160, y: 400 },
+                    { x: 160, y: 490 }
                 ]
             },
             // Unidad Control -> ALU (ALUOp)
@@ -1048,7 +1053,8 @@ const instructionPaths = {
                 waypoints: [
                     { x: 150, y: 315 },
                     { x: 155, y: 315 },
-                    { x: 155, y: 350 }
+                    { x: 155, y: 380 },
+                    { x: 125, y: 380 }
                 ]
             },
             // MUX PC -> PC
@@ -1056,8 +1062,8 @@ const instructionPaths = {
                 from: 'mux-pc', fromPort: 'pc_next',
                 to: 'pc', toPort: 'pc_in',
                 waypoints: [
-                    { x: 125, y: 450 },
-                    { x: 125, y: 490 },
+                    { x: 125, y: 550 },
+                    { x: 10, y: 550 },
                     { x: 10, y: 490 },
                     { x: 10, y: 100 },
                     { x: 40, y: 100 }
