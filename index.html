@@ -41,7 +41,7 @@
                 <!-- FILA 1 -->
                 
                 <!-- PC -->
-                <div class="box" id="pc" style="top: 50px; left: 50px; width: 80px; height: 100px;">
+                <div class="box clickable-box" id="pc" style="top: 50px; left: 50px; width: 80px; height: 100px;" onclick="openModal('pc')">
                     <div class="box-label">PC</div>
                     <div class="port port-out port-right" data-port="pc_out"></div>
                     <div class="port port-in port-left" data-port="pc_in"></div>
@@ -114,7 +114,7 @@
                 <!-- FILA 3 -->
 
                 <!-- Banco de Registros -->
-                <div class="box" id="reg-bank" style="top: 250px; left: 450px; width: 160px; height: 160px;">
+                <div class="box clickable-box" id="reg-bank" style="top: 250px; left: 450px; width: 160px; height: 160px;" onclick="openModal('reg-bank')">
                     <div class="box-label">Banco de<br>Registros</div>
                     <div class="port port-in port-top" style="left: 30%;" data-port="rs1_addr"></div>
                     <div class="port port-in port-top" style="left: 60%;" data-port="rs2_addr"></div>
@@ -147,7 +147,7 @@
                 <!-- FILA 4 -->
 
                 <!-- Memoria de Datos -->
-                <div class="box" id="mem-data" style="top: 50px; left: 980px; width: 140px; height: 280px;">
+                <div class="box clickable-box" id="mem-data" style="top: 50px; left: 980px; width: 140px; height: 280px;" onclick="openModal('mem-data')">
                     <div class="box-label">Memoria de<br>Datos</div>
                     <div class="port port-in port-left" style="top: 40%;" data-port="addr_in"></div>
                     <div class="port port-in port-left" style="top: 60%;" data-port="data_in"></div>
@@ -220,6 +220,20 @@
             </div>
         </div>
     </div>
+
+    <!-- MODALES -->
+    <div id="modal-overlay" class="modal-overlay" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3 id="modal-title">Título del Modal</h3>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Aquí se inyectará el contenido dinámicamente -->
+            </div>
+        </div>
+    </div>
+
     <script src="js/script.js"></script>
 </body>
 </html>

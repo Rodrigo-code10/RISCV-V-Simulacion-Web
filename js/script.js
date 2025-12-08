@@ -55,7 +55,10 @@ const instructionPaths = {
                     { x: 500, y: 40 },
                     { x: 500, y: 10 },
                     { x: 800, y: 10 },
-                    { x: 800, y: 130 }
+                    { x: 800, y: 220 },
+                    { x: 750, y: 220 },
+                    { x: 750, y: 420 },
+                    { x: 800, y: 420 }
                 ]
             },
             // Decodificador -> Sign Extend
@@ -262,7 +265,7 @@ const instructionPaths = {
                     { x: 400, y: 120 }
                 ]
             },
-            // Decodificador -> Unidad Control
+            // Decodificador -> Unidad Control (opcode)
             {
                 from: 'decoder', fromPort: 'opcode_out',
                 to: 'control-unit', toPort: 'opcode_in',
@@ -270,7 +273,10 @@ const instructionPaths = {
                     { x: 500, y: 40 },
                     { x: 500, y: 10 },
                     { x: 800, y: 10 },
-                    { x: 800, y: 430 }
+                    { x: 800, y: 220 },
+                    { x: 750, y: 220 },
+                    { x: 750, y: 420 },
+                    { x: 800, y: 420 }
                 ]
             },
             // Decodificador -> Banco Registros (rs1)
@@ -467,7 +473,7 @@ const instructionPaths = {
                     { x: 400, y: 120 }
                 ]
             },
-            // Decodificador -> Unidad Control
+            // Decodificador -> Unidad Control (opcode)
             {
                 from: 'decoder', fromPort: 'opcode_out',
                 to: 'control-unit', toPort: 'opcode_in',
@@ -475,7 +481,10 @@ const instructionPaths = {
                     { x: 500, y: 40 },
                     { x: 500, y: 10 },
                     { x: 800, y: 10 },
-                    { x: 800, y: 430 }
+                    { x: 800, y: 220 },
+                    { x: 750, y: 220 },
+                    { x: 750, y: 420 },
+                    { x: 800, y: 420 }
                 ]
             },
             // Decodificador -> Banco Registros (rs1)
@@ -695,7 +704,7 @@ const instructionPaths = {
                     { x: 400, y: 120 }
                 ]
             },
-            // Decodificador -> Unidad Control
+            // Decodificador -> Unidad Control (opcode)
             {
                 from: 'decoder', fromPort: 'opcode_out',
                 to: 'control-unit', toPort: 'opcode_in',
@@ -703,7 +712,10 @@ const instructionPaths = {
                     { x: 500, y: 40 },
                     { x: 500, y: 10 },
                     { x: 800, y: 10 },
-                    { x: 800, y: 430 }
+                    { x: 800, y: 220 },
+                    { x: 750, y: 220 },
+                    { x: 750, y: 420 },
+                    { x: 800, y: 420 }
                 ]
             },
             // Decodificador -> Banco Registros (rs1)
@@ -921,7 +933,7 @@ const instructionPaths = {
                     { x: 400, y: 120 }
                 ]
             },
-            // Decodificador -> Unidad Control
+            // Decodificador -> Unidad Control (opcode)
             {
                 from: 'decoder', fromPort: 'opcode_out',
                 to: 'control-unit', toPort: 'opcode_in',
@@ -929,7 +941,10 @@ const instructionPaths = {
                     { x: 500, y: 40 },
                     { x: 500, y: 10 },
                     { x: 800, y: 10 },
-                    { x: 800, y: 430 }
+                    { x: 800, y: 220 },
+                    { x: 750, y: 220 },
+                    { x: 750, y: 420 },
+                    { x: 800, y: 420 }
                 ]
             },
             // Decodificador -> Banco Registros (rs1)
@@ -1238,15 +1253,8 @@ window.addEventListener('load', () => {
 
 setInterval(loadCodeFromStorage, 1000);
 
+// ==================== CPU Y EJECUCIÓN ====================
 
-
-
-
-
-
-//MIO
-
-// Cargar programa desde localStorage
 const savedProgram = localStorage.getItem('assemblyJSON');
 let programObj = null;
 
@@ -1258,12 +1266,9 @@ if (savedProgram) {
     }
 }
 
-// Crear CPU
 const cpu = createCPU(programObj);
 
-// Tabla de ejecución
 const EXEC_TABLE = {
-    // R-type
     add:  (c,a) => c.registers[R(a.args.rd)] = c.registers[R(a.args.rs1)] + c.registers[R(a.args.rs2)],
     sub:  (c,a) => c.registers[R(a.args.rd)] = c.registers[R(a.args.rs1)] - c.registers[R(a.args.rs2)],
     and:  (c,a) => c.registers[R(a.args.rd)] = c.registers[R(a.args.rs1)] & c.registers[R(a.args.rs2)],
@@ -1274,8 +1279,6 @@ const EXEC_TABLE = {
     sll:  (c,a) => c.registers[R(a.args.rd)] = c.registers[R(a.args.rs1)] << (c.registers[R(a.args.rs2)] & 0x1F),
     srl:  (c,a) => c.registers[R(a.args.rd)] = c.registers[R(a.args.rs1)] >>> (c.registers[R(a.args.rs2)] & 0x1F),
     sra:  (c,a) => c.registers[R(a.args.rd)] = c.registers[R(a.args.rs1)] >> (c.registers[R(a.args.rs2)] & 0x1F),
-
-    // I-type
     addi: (c,a) => c.registers[R(a.args.rd)] = c.registers[R(a.args.rs1)] + a.args.imm,
     andi: (c,a) => c.registers[R(a.args.rd)] = c.registers[R(a.args.rs1)] & a.args.imm,
     ori:  (c,a) => c.registers[R(a.args.rd)] = c.registers[R(a.args.rs1)] | a.args.imm,
@@ -1285,22 +1288,16 @@ const EXEC_TABLE = {
     slli: (c,a) => c.registers[R(a.args.rd)] = c.registers[R(a.args.rs1)] << (a.args.imm & 0x1F),
     srli: (c,a) => c.registers[R(a.args.rd)] = c.registers[R(a.args.rs1)] >>> (a.args.imm & 0x1F),
     srai: (c,a) => c.registers[R(a.args.rd)] = c.registers[R(a.args.rs1)] >> (a.args.imm & 0x1F),
-
-    // LOAD
     lw: (c,a) => {
         const addr = c.registers[R(a.args.base)] + a.args.offset;
         const dv = new DataView(c.mem);
         c.registers[R(a.args.rd)] = dv.getInt32(addr, true);
     },
-
-    // STORE
     sw: (c,a) => {
         const addr = c.registers[R(a.args.base)] + a.args.offset;
         const dv = new DataView(c.mem);
         dv.setInt32(addr, c.registers[R(a.args.rs2)], true);
     },
-
-    // BRANCH
     beq: (c,a) => { if(c.registers[R(a.args.rs1)] === c.registers[R(a.args.rs2)]) { c.pc += a.args.imm; c.pcChanged = true; } },
     bne: (c,a) => { if(c.registers[R(a.args.rs1)] !== c.registers[R(a.args.rs2)]) { c.pc += a.args.imm; c.pcChanged = true; } },
     blt: (c,a) => { if(c.registers[R(a.args.rs1)] < c.registers[R(a.args.rs2)]) { c.pc += a.args.imm; c.pcChanged = true; } },
@@ -1309,22 +1306,19 @@ const EXEC_TABLE = {
     bgeu:(c,a) => { if((c.registers[R(a.args.rs1)]>>>0) >= (c.registers[R(a.args.rs2)]>>>0)) { c.pc += a.args.imm; c.pcChanged = true; } },
 };
 
-// Crear CPU
 function createCPU(programJSON) {
     return {
         registers: new Int32Array(32),
         pc: 0,
         mem: new ArrayBuffer(64*1024),
         halted: false,
-        ir: programJSON.instructions,
-        labels: programJSON.labels
+        ir: programJSON ? programJSON.instructions : [],
+        labels: programJSON ? programJSON.labels : {}
     };
 }
 
-// Convertir "x10" -> 10
 function R(x){ return parseInt(x.replace("x","")); }
 
-// Ejecutar un paso
 function step(cpu) {
     if(cpu.halted) return;
 
@@ -1352,20 +1346,132 @@ function step(cpu) {
     console.groupEnd();
 }
 
-
 function run(cpu, maxSteps=100000) {
     for(let i=0;i<maxSteps && !cpu.halted;i++) step(cpu);
 }
 
-
 document.querySelector('.step').addEventListener('click', () => step(cpu));
 
-
-
-//Para el uso de lo botones
 document.querySelector('.r-btn').addEventListener('click', () => activateInstruction('R'));
 document.querySelector('.i-btn').addEventListener('click', () => activateInstruction('I'));
 document.querySelector('.l-btn').addEventListener('click', () => activateInstruction('L'));
 document.querySelector('.s-btn').addEventListener('click', () => activateInstruction('S'));
 document.querySelector('.b-btn').addEventListener('click', () => activateInstruction('B'));
 document.querySelector('.reset-btn').addEventListener('click', () => resetAll());
+
+const modalConfigs = {
+    'pc': {
+        title: 'Program Counter (PC)',
+        getContent: () => {
+            return `
+                <div style="font-family: 'Courier New', monospace;">
+                    <p style="margin-bottom: 15px; color: #b0b0b0;">
+                        El Program Counter contiene la dirección de la siguiente instrucción a ejecutar.
+                    </p>
+                    <div style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 8px; border: 1px solid #444;">
+                        <p style="margin: 0;"><strong>Valor actual:</strong> <span style="color: #4CAF50;">${cpu.pc}</span></p>
+                        <p style="margin: 10px 0 0 0;"><strong>En hexadecimal:</strong> <span style="color: #4CAF50;">0x${cpu.pc.toString(16).toUpperCase().padStart(8, '0')}</span></p>
+                    </div>
+                    
+                    <!-- Aquí puedes agregar más código según necesites -->
+                </div>
+            `;
+        }
+    },
+    
+    'reg-bank': {
+        title: 'Banco de Registros',
+        getContent: () => {
+            let registersHTML = '';
+            for (let i = 0; i < 32; i++) {
+                const value = cpu.registers[i];
+                const hexValue = (value >>> 0).toString(16).toUpperCase().padStart(8, '0');
+                registersHTML += `
+                    <div style="display: flex; justify-content: space-between; padding: 8px; background: ${i % 2 === 0 ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.5)'}; border-radius: 4px; margin-bottom: 5px;">
+                        <span style="color: #FF6F00; font-weight: bold;">x${i}:</span>
+                        <span style="color: #4CAF50;">${value}</span>
+                        <span style="color: #64B5F6;">0x${hexValue}</span>
+                    </div>
+                `;
+            }
+            
+            return `
+                <div style="font-family: 'Courier New', monospace;">
+                    <p style="margin-bottom: 15px; color: #b0b0b0;">
+                        32 registros de propósito general (x0 siempre es 0).
+                    </p>
+                    <div style="max-height: 400px; overflow-y: auto;">
+                        ${registersHTML}
+                    </div>
+                    
+                    <!-- Aquí puedes agregar más código según necesites -->
+                </div>
+            `;
+        }
+    },
+    
+    'mem-data': {
+        title: 'Memoria de Datos',
+        getContent: () => {
+            let memHTML = '';
+            const dv = new DataView(cpu.mem);
+            
+            for (let i = 0; i < 256; i += 16) {
+                let rowHex = '';
+                let rowAscii = '';
+                
+                for (let j = 0; j < 16 && (i + j) < 256; j++) {
+                    const byte = dv.getUint8(i + j);
+                    rowHex += byte.toString(16).toUpperCase().padStart(2, '0') + ' ';
+                    rowAscii += (byte >= 32 && byte <= 126) ? String.fromCharCode(byte) : '.';
+                }
+                
+                memHTML += `
+                    <div style="display: flex; gap: 20px; padding: 5px; font-size: 0.85rem; font-family: 'Courier New', monospace;">
+                        <span style="color: #FF6F00; min-width: 60px;">0x${i.toString(16).toUpperCase().padStart(4, '0')}:</span>
+                        <span style="color: #4CAF50; flex: 1;">${rowHex}</span>
+                        <span style="color: #64B5F6;">${rowAscii}</span>
+                    </div>
+                `;
+            }
+            
+            return `
+                <div>
+                    <p style="margin-bottom: 15px; color: #b0b0b0;">
+                        Visualización de los primeros 256 bytes de la memoria de datos.
+                    </p>
+                    <div style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 8px; border: 1px solid #444; max-height: 400px; overflow-y: auto;">
+                        ${memHTML}
+                    </div>
+                    
+                    <!-- Aquí puedes agregar más código según necesites -->
+                </div>
+            `;
+        }
+    }
+};
+
+function openModal(modalId) {
+    const config = modalConfigs[modalId];
+    if (!config) return;
+    
+    const overlay = document.getElementById('modal-overlay');
+    const title = document.getElementById('modal-title');
+    const body = document.getElementById('modal-body');
+    
+    title.textContent = config.title;
+    body.innerHTML = config.getContent();
+    
+    overlay.classList.add('active');
+}
+
+function closeModal() {
+    const overlay = document.getElementById('modal-overlay');
+    overlay.classList.remove('active');
+}
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeModal();
+    }
+});
