@@ -22,7 +22,7 @@
     </div>
 
     <div class="main-layout">
-        <!-- Panel izquierdo del codigo -->
+        <!-- Panel izquierdo -->
         <div class="side-panel side-panel-left">
             <div class="code-display">
                 <div class="code-header">
@@ -33,118 +33,150 @@
                 </div>
             </div>
         </div>
-
         <div class="main-content">
-            <!-- Área del esquematico broo -->
+            <!-- Área del esquemático -->
             <div class="container">
                 <svg id="connections-svg"></svg>
 
-                <!-- FILA 1: SUPERIOR -->
+                <!-- FILA 1 -->
                 
                 <!-- PC -->
-                <div class="box" id="pc" style="top: 50px; left: 50px; width: 100px; height: 80px;">
+                <div class="box" id="pc" style="top: 50px; left: 50px; width: 80px; height: 100px;">
                     <div class="box-label">PC</div>
                     <div class="port port-out port-right" data-port="pc_out"></div>
-                    <div class="port port-in port-bottom" data-port="pc_in"></div>
+                    <div class="port port-in port-left" data-port="pc_in"></div>
+                </div>
+
+                <!-- Memoria de Programa -->
+                <div class="box" id="mem-prog" style="top: 40px; left: 200px; width: 140px; height: 120px;">
+                    <div class="box-label">Memoria de<br>programa</div>
+                    <div class="port port-in port-left" data-port="addr_prog"></div>
+                    <div class="port port-out port-bottom" data-port="instr_prog"></div>
+                </div>
+
+                <!-- Orden & Sign Extend Superior -->
+                <div class="box" id="orden-sign" style="top: 180px; left: 210px; width: 120px; height: 60px;">
+                    <div class="box-label">Orden &<br>Sign Extend</div>
+                    <div class="port port-in port-top" data-port="instr_orden"></div>
+                    <div class="port port-out port-bottom" data-port="offset_out"></div>
                 </div>
 
                 <!-- Sumador PC+4 -->
-                <div class="box" id="sum-pc4" style="top: 50px; left: 220px; width: 130px; height: 80px;">
-                    <div class="box-label">Sumador<br>PC+4</div>
-                    <div class="port port-in port-left" data-port="pc_in"></div>
+                <div class="box" id="sum-pc4" style="top: 280px; left: 70px; width: 70px; height: 70px;">
+                    <div class="box-label">+4</div>
+                    <div class="port port-in port-top" data-port="pc_4_in"></div>
                     <div class="port port-out port-right" data-port="pc4_out"></div>
                 </div>
 
-                <!-- Unidad Control -->
-                <div class="box" id="control-unit" style="top: 50px; left: 520px; width: 120px; height: 80px;">
-                    <div class="box-label">Unidad<br>Control</div>
-                    <div class="port port-in port-left" data-port="opcode_in"></div>
+                <!-- AND Gate -->
+                <div class="box gate" id="and-gate" style="top: 290px; left: 190px; width: 40px; height: 40px;">
+                    <div class="box-label">AND</div>
+                    <div class="port port-in port-left" style="top: 30%;" data-port="and_in1"></div>
+                    <div class="port port-in port-left" style="top: 70%;" data-port="and_in2"></div>
+                    <div class="port port-out port-right" data-port="and_out"></div>
                 </div>
 
                 <!-- Sumador Branch -->
-                <div class="box" id="sum-branch" style="top: 50px; left: 730px; width: 130px; height: 80px;">
-                    <div class="box-label">Sumador<br>Branch</div>
-                    <div class="port port-in port-left" data-port="pc_branch"></div>
-                    <div class="port port-in port-bottom" data-port="offset_branch"></div>
-                    <div class="port port-out port-right" data-port="branch_result"></div>
+                <div class="box" id="sum-branch" style="top: 260px; left: 270px; width: 70px; height: 70px;">
+                    <div class="box-label">+</div>
+                    <div class="port port-in port-top" data-port="pc_branch"></div>
+                    <div class="port port-in port-right" data-port="offset_branch"></div>
+                    <div class="port port-out port-bottom" data-port="branch_result"></div>
                 </div>
 
                 <!-- MUX PC -->
-                <div class="box" id="mux-pc" style="top: 50px; left: 940px; width: 90px; height: 80px;">
-                    <div class="box-label">MUX<br>PC</div>
+                <div class="box mux" id="mux-pc" style="top: 360px; left: 100px; width: 50px; height: 80px;">
+                    <div class="box-label">M<br>U<br>X</div>
                     <div class="port port-in port-top" data-port="pc_normal"></div>
-                    <div class="port port-in port-left" data-port="pc_branch"></div>
+                    <div class="port port-in port-right" data-port="pc_branch_in"></div>
                     <div class="port port-out port-bottom" data-port="pc_next"></div>
                 </div>
 
-                <!-- FILA 2: MEDIA -->
-
-                <!-- Memoria de Instrucciones -->
-                <div class="box" id="mem-instr" style="top: 220px; left: 120px; width: 150px; height: 100px;">
-                    <div class="box-label">Memoria de<br>Instrucciones</div>
-                    <div class="port port-in port-top" data-port="address"></div>
-                    <div class="port port-out port-right" data-port="instr_out"></div>
-                </div>
+                <!-- FILA 2 -->
 
                 <!-- Decodificador -->
-                <div class="box" id="decoder" style="top: 220px; left: 370px; width: 140px; height: 120px;">
+                <div class="box" id="decoder" style="top: 50px; left: 420px; width: 160px; height: 140px;">
                     <div class="box-label">Decodificador</div>
                     <div class="port port-in port-left" data-port="instr_in"></div>
-                    <div class="port port-out port-bottom" style="left: 25%;" data-port="rs1_out"></div>
-                    <div class="port port-out port-bottom" style="left: 50%;" data-port="rs2_out"></div>
-                    <div class="port port-out port-right" data-port="imm_out"></div>
+                    <div class="port port-out port-right" style="top: 25%;" data-port="imm_out"></div>
+                    <div class="port port-out port-right" style="top: 50%;" data-port="rs2_out"></div>
+                    <div class="port port-out port-right" style="top: 75%;" data-port="rs1_out"></div>
+                    <div class="port port-out port-top" data-port="opcode_out"></div>
                 </div>
 
-                <!-- Extensión de Signo -->
-                <div class="box" id="sign-ext" style="top: 220px; left: 620px; width: 130px; height: 90px;">
-                    <div class="box-label">Extensión<br>de Signo</div>
+                <!-- Sign Extend -->
+                <div class="box" id="sign-ext" style="top: 70px; left: 650px; width: 110px; height: 70px;">
+                    <div class="box-label">Sign<br>Extend</div>
                     <div class="port port-in port-left" data-port="imm_in"></div>
-                    <div class="port port-out port-bottom" data-port="imm_ext"></div>
+                    <div class="port port-out port-right" data-port="imm_ext"></div>
                 </div>
 
-                <!-- FILA 3: INFERIOR -->
+                <!-- FILA 3 -->
 
                 <!-- Banco de Registros -->
-                <div class="box" id="reg-bank" style="top: 430px; left: 50px; width: 150px; height: 140px;">
+                <div class="box" id="reg-bank" style="top: 250px; left: 450px; width: 160px; height: 160px;">
                     <div class="box-label">Banco de<br>Registros</div>
                     <div class="port port-in port-top" style="left: 30%;" data-port="rs1_addr"></div>
-                    <div class="port port-in port-top" style="left: 70%;" data-port="rs2_addr"></div>
-                    <div class="port port-out port-right" style="top: 35%;" data-port="rs1_data"></div>
-                    <div class="port port-out port-right" style="top: 65%;" data-port="rs2_data"></div>
-                    <div class="port port-in port-bottom" data-port="wr_data"></div>
+                    <div class="port port-in port-top" style="left: 60%;" data-port="rs2_addr"></div>
+                    <div class="port port-out port-right" style="top: 35%;" data-port="do1_out"></div>
+                    <div class="port port-out port-right" style="top: 55%;" data-port="do2_out"></div>
+                    <div class="port port-in port-bottom" style="left: 80%;" data-port="wr_data"></div>
+                    <div class="port port-in port-left" style="top: 80%;" data-port="wr_addr"></div>
+                    <div class="port port-in port-bottom" style="left: 20%;" data-port="reg_write"></div>
                 </div>
 
-                <!-- MUX ALU -->
-                <div class="box" id="mux-alu" style="top: 450px; left: 320px; width: 80px; height: 90px;">
-                    <div class="box-label">MUX</div>
-                    <div class="port port-in port-left" style="top: 35%;" data-port="mux_rs2"></div>
-                    <div class="port port-in port-top" data-port="mux_imm"></div>
-                    <div class="port port-out port-right" data-port="mux_out"></div>
+                <!-- MUX d1 -->
+                <div class="box mux" id="mux-d1" style="top: 210px; left: 680px; width: 50px; height: 80px;">
+                    <div class="box-label">M<br>U<br>X</div>
+                    <div class="port port-in port-left" style="top: 35%;" data-port="d1_imm"></div>
+                    <div class="port port-in port-bottom" data-port="d1_do2"></div>
+                    <div class="port port-out port-right" data-port="d1_out"></div>
+                    <div class="port port-in port-top" data-port="d1_control"></div>
                 </div>
 
                 <!-- ALU -->
-                <div class="box" id="alu" style="top: 430px; left: 490px; width: 160px; height: 120px;">
+                <div class="box" id="alu" style="top: 250px; left: 800px; width: 100px; height: 120px;">
                     <div class="box-label">ALU</div>
-                    <div class="port port-in port-left" style="top: 35%;" data-port="op1"></div>
-                    <div class="port port-in port-left" style="top: 65%;" data-port="op2"></div>
+                    <div class="port port-in port-left" style="top: 30%;" data-port="op1"></div>
+                    <div class="port port-in port-left" style="top: 70%;" data-port="op2"></div>
                     <div class="port port-out port-right" data-port="alu_result"></div>
+                    <div class="port port-out port-top" data-port="alu_zero"></div>
+                    <div class="port port-in port-bottom" data-port="alu_control"></div>
                 </div>
+
+                <!-- FILA 4 -->
 
                 <!-- Memoria de Datos -->
-                <div class="box" id="mem-data" style="top: 440px; left: 740px; width: 140px; height: 100px;">
+                <div class="box" id="mem-data" style="top: 50px; left: 980px; width: 140px; height: 280px;">
                     <div class="box-label">Memoria de<br>Datos</div>
                     <div class="port port-in port-left" style="top: 40%;" data-port="addr_in"></div>
-                    <div class="port port-in port-left" style="top: 70%;" data-port="data_in"></div>
-                    <div class="port port-out port-right" data-port="data_out"></div>
+                    <div class="port port-in port-left" style="top: 60%;" data-port="data_in"></div>
+                    <div class="port port-out port-bottom" data-port="data_out"></div>
+                    <div class="port port-in port-top" style="left: 20%;" data-port="mem_write"></div>
+                    <div class="port port-in port-top" style="left: 50%;" data-port="mem_read"></div>
                 </div>
 
-                <!-- MUX WB -->
-                <div class="box" id="mux-wb" style="top: 450px; left: 960px; width: 80px; height: 90px;">
-                    <div class="box-label">MUX<br>WB</div>
-                    <div class="port port-in port-left" style="top: 40%;" data-port="wb_alu"></div>
-                    <div class="port port-in port-left" style="top: 70%;" data-port="wb_mem"></div>
+                <!-- MUX WB  -->
+                <div class="box mux" id="mux-wb" style="top: 380px; left: 980px; width: 50px; height: 80px;">
+                    <div class="box-label">M<br>U<br>X</div>
+                    <div class="port port-in port-top" data-port="wb_mem"></div>
+                    <div class="port port-in port-left" data-port="wb_alu"></div>
                     <div class="port port-out port-bottom" data-port="wb_out"></div>
+                    <div class="port port-in port-right" data-port="wb_control"></div>
                 </div>
+
+                <!-- Unidad de Control -->
+                <div class="box" id="control-unit" style="top: 440px; left: 730px; width: 140px; height: 120px;">
+                    <div class="box-label">Unidad de<br>Control</div>
+                    <div class="port port-in port-top" data-port="opcode_in"></div>
+                    <div class="port port-out port-left" style="top: 30%;" data-port="cu_out1"></div>
+                    <div class="port port-out port-left" style="top: 50%;" data-port="cu_out2"></div>
+                    <div class="port port-out port-left" style="top: 70%;" data-port="cu_out3"></div>
+                    <div class="port port-out port-right" style="top: 30%;" data-port="cu_out4"></div>
+                    <div class="port port-out port-right" style="top: 50%;" data-port="cu_out5"></div>
+                    <div class="port port-out port-right" style="top: 70%;" data-port="cu_out6"></div>
+                </div>
+
             </div>
 
             <!-- Panel de abajo -->
@@ -182,7 +214,6 @@
             </div>
         </div>
     </div>
-
     <script src="js/script.js"></script>
 </body>
 </html>

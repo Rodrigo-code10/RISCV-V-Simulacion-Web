@@ -1,140 +1,226 @@
 const instructionPaths = {
     R: {
         color: 'r',
-        components: ['pc', 'sum-pc4', 'mux-pc', 'mem-instr', 'decoder', 'control-unit', 'reg-bank', 'mux-alu', 'alu', 'mux-wb'],
+        components: ['pc', 'mem-prog', 'decoder', 'control-unit', 'sign-ext', 'reg-bank', 'mux-d1', 'alu', 'mux-wb', 'sum-pc4', 'mux-pc'],
         connections: [
+            // PC -> Memoria de Programa
             {
                 from: 'pc', fromPort: 'pc_out',
-                to: 'sum-pc4', toPort: 'pc_in',
-                waypoints: []
-            },
-            {
-                from: 'sum-pc4', fromPort: 'pc4_out',
-                to: 'mux-pc', toPort: 'pc_normal',
+                to: 'mem-prog', toPort: 'addr_prog',
                 waypoints: [
-                    { x: 360, y: 90 },
-                    { x: 360, y: 30 },
-                    { x: 985, y: 30 },
-                    { x: 985, y: 40 }
+                    { x: 140, y: 100 },
+                    { x: 200, y: 100 }
                 ]
             },
+            // PC -> Sumador PC+4
             {
                 from: 'pc', fromPort: 'pc_out',
-                to: 'mem-instr', toPort: 'address',
+                to: 'sum-pc4', toPort: 'pc_4_in',
                 waypoints: [
-                    { x: 160, y: 90 },
-                    { x: 160, y: 160 },
-                    { x: 30, y: 160 },
-                    { x: 30, y: 210 },
-                    { x: 195, y: 210 }
+                    { x: 140, y: 100 },
+                    { x: 140, y: 240 },
+                    { x: 105, y: 240 },
+                    { x: 105, y: 270 }
                 ]
             },
-            {
-                from: 'mem-instr', fromPort: 'instr_out',
-                to: 'decoder', toPort: 'instr_in',
-                waypoints: [
-                    { x: 280, y: 270 },
-                    { x: 360, y: 270 }
-                ]
-            },
+            // Decodificador -> Banco de Registro
             {
                 from: 'decoder', fromPort: 'imm_out',
-                to: 'control-unit', toPort: 'opcode_in',
+                to: 'reg-bank', toPort: 'wr_addr',
                 waypoints: [
-                    { x: 520, y: 280 },
-                    { x: 560, y: 280 },
-                    { x: 560, y: 150 },
-                    { x: 510, y: 150 }
+                    { x: 590, y: 85 },
+                    { x: 630, y: 85 },
+                    { x: 630, y: 430 },
+                    { x: 420, y: 430 },
+                    { x: 420, y: 373 },
+                    { x: 440, y: 373 }
                 ]
             },
+            // Memoria Programa -> Decodificador
+            {
+                from: 'mem-prog', fromPort: 'instr_prog',
+                to: 'decoder', toPort: 'instr_in',
+                waypoints: [
+                    { x: 270, y: 170 },
+                    { x: 270, y: 170 },
+                    { x: 400, y: 170 },
+                    { x: 400, y: 120 }
+                ]
+            },
+            // Decodificador -> Unidad Control (opcode)
+            {
+                from: 'decoder', fromPort: 'opcode_out',
+                to: 'control-unit', toPort: 'opcode_in',
+                waypoints: [
+                    { x: 500, y: 40 },
+                    { x: 500, y: 10 },
+                    { x: 800, y: 10 },
+                    { x: 800, y: 130 }
+                ]
+            },
+            // Decodificador -> Sign Extend
+            {
+                from: 'decoder', fromPort: 'imm_out',
+                to: 'sign-ext', toPort: 'imm_in',
+                waypoints: [
+                    { x: 590, y: 85 },
+                    { x: 640, y: 85 },
+                    { x: 640, y: 105 }
+                ]
+            },
+            // Decodificador -> Banco Registros (rs1)
             {
                 from: 'decoder', fromPort: 'rs1_out',
                 to: 'reg-bank', toPort: 'rs1_addr',
                 waypoints: [
-                    { x: 405, y: 360 },
-                    { x: 405, y: 380 },
-                    { x: 60, y: 380 },
-                    { x: 60, y: 420 },
-                    { x: 95, y: 420 }
+                    { x: 590, y: 153 },
+                    { x: 640, y: 153 },
+                    { x: 640, y: 230 },
+                    { x: 499, y: 230 }
                 ]
             },
+            // Decodificador -> Banco Registros (rs2)
             {
                 from: 'decoder', fromPort: 'rs2_out',
                 to: 'reg-bank', toPort: 'rs2_addr',
                 waypoints: [
-                    { x: 440, y: 360 },
-                    { x: 440, y: 370 },
-                    { x: 45, y: 370 },
-                    { x: 45, y: 420 },
-                    { x: 155, y: 420 }
+                    { x: 590, y: 120 },
+                    { x: 630, y: 120 },
+                    { x: 630, y: 220 },
+                    { x: 546, y: 220 }
                 ]
             },
+            // Banco Registros do1 -> ALU op1
             {
-                from: 'reg-bank', fromPort: 'rs1_data',
+                from: 'reg-bank', fromPort: 'do1_out',
                 to: 'alu', toPort: 'op1',
                 waypoints: [
-                    { x: 210, y: 479 },
-                    { x: 230, y: 479 },
-                    { x: 230, y: 600 },
-                    { x: 460, y: 600 },
-                    { x: 460, y: 472 },
-                    { x: 480, y: 472 }
+                    { x: 620, y: 306 },
+                    { x: 660, y: 306 },
+                    { x: 660, y: 300 },
+                    { x: 780, y: 300 },
+                    { x: 780, y: 286 },
+                    { x: 790, y: 286 }
                 ]
             },
+            // Banco Registros do2 -> MUX d1
             {
-                from: 'reg-bank', fromPort: 'rs2_data',
-                to: 'mux-alu', toPort: 'mux_rs2',
+                from: 'reg-bank', fromPort: 'do2_out',
+                to: 'mux-d1', toPort: 'd1_do2',
                 waypoints: [
-                    { x: 210, y: 521 },
-                    { x: 280, y: 521 },
-                    { x: 280, y: 482 },
-                    { x: 310, y: 482 }
+                    { x: 620, y: 338 },
+                    { x: 650, y: 338 },
+                    { x: 650, y: 338 },
+                    { x: 705, y: 338 },
+                    { x: 705, y: 300 }
                 ]
             },
+            // Sign Extend -> MUX d1
             {
-                from: 'mux-alu', fromPort: 'mux_out',
+                from: 'sign-ext', fromPort: 'imm_ext',
+                to: 'mux-d1', toPort: 'd1_imm',
+                waypoints: [
+                    { x: 770, y: 105 },
+                    { x: 800, y: 105 },
+                    { x: 800, y: 180 },
+                    { x: 680, y: 180 },
+                    { x: 680, y: 232 }
+                ]
+            },
+            // MUX d1 -> ALU op2
+            {
+                from: 'mux-d1', fromPort: 'd1_out',
                 to: 'alu', toPort: 'op2',
                 waypoints: [
-                    { x: 410, y: 495 },
-                    { x: 440, y: 495 },
-                    { x: 440, y: 508 },
-                    { x: 480, y: 508 }
+                    { x: 740, y: 250 },
+                    { x: 770, y: 250 },
+                    { x: 770, y: 334 },
+                    { x: 790, y: 334 }
                 ]
             },
+            // Unidad Control -> Banco Registros (RegWrite)
+            {
+                from: 'control-unit', fromPort: 'cu_out1',
+                to: 'reg-bank', toPort: 'reg_write',
+                waypoints: [
+                    { x: 720, y: 473 },
+                    { x: 483, y: 473 }
+                ]
+            },
+            // Unidad Control -> MUX d1 (ALUSrc)
+            {
+                from: 'control-unit', fromPort: 'cu_out2',
+                to: 'mux-d1', toPort: 'd1_control',
+                waypoints: [
+                    { x: 670, y: 500 },
+                    { x: 670, y: 200 },
+                    { x: 705, y: 200 }
+                ]
+            },
+            // Unidad Control -> MUX WB (MemtoReg)
+            {
+                from: 'control-unit', fromPort: 'cu_out3',
+                to: 'mux-wb', toPort: 'wb_control',
+                waypoints: [
+                    { x: 720, y: 522 },
+                    { x: 720, y: 580 },
+                    { x: 1040, y: 580 },
+                    { x: 1040, y: 419 }
+                ]
+            },
+            // Unidad Control -> ALU (ALUOp)
+            {
+                from: 'control-unit', fromPort: 'cu_out4',
+                to: 'alu', toPort: 'alu_control',
+                waypoints: [
+                    { x: 880, y: 473 },
+                    { x: 900, y: 473 },
+                    { x: 900, y: 380 },
+                    { x: 850, y: 380 }
+                ]
+            },
+            // ALU -> MUX WB
             {
                 from: 'alu', fromPort: 'alu_result',
                 to: 'mux-wb', toPort: 'wb_alu',
                 waypoints: [
-                    { x: 660, y: 490 },
-                    { x: 700, y: 490 },
-                    { x: 700, y: 420 },
-                    { x: 930, y: 420 },
-                    { x: 930, y: 486 },
-                    { x: 950, y: 486 }
+                    { x: 910, y: 310 },
+                    { x: 960, y: 310 },
+                    { x: 960, y: 420 }
                 ]
             },
+            // MUX WB -> Banco Registros
             {
                 from: 'mux-wb', fromPort: 'wb_out',
                 to: 'reg-bank', toPort: 'wr_data',
                 waypoints: [
-                    { x: 1000, y: 550 },
-                    { x: 1000, y: 700 },
-                    { x: 15, y: 700 },
-                    { x: 15, y: 580 },
-                    { x: 125, y: 580 }
+                    { x: 1005, y: 470 },
+                    { x: 1005, y: 590 },
+                    { x: 380, y: 590 },
+                    { x: 380, y: 420 },
+                    { x: 578, y: 420 }
                 ]
             },
+            // Sumador PC+4 -> MUX PC
+            {
+                from: 'sum-pc4', fromPort: 'pc4_out',
+                to: 'mux-pc', toPort: 'pc_normal',
+                waypoints: [
+                    { x: 150, y: 315 },
+                    { x: 155, y: 315 },
+                    { x: 155, y: 350 }
+                ]
+            },
+            // MUX PC -> PC
             {
                 from: 'mux-pc', fromPort: 'pc_next',
                 to: 'pc', toPort: 'pc_in',
                 waypoints: [
-                    { x: 985, y: 140 },
-                    { x: 985, y: 160 },
-                    { x: 1080, y: 160 },
-                    { x: 1080, y: 660 },
-                    { x: 10, y: 660 },
-                    { x: 10, y: 140 },
-                    { x: 100, y: 140 }
+                    { x: 125, y: 450 },
+                    { x: 125, y: 490 },
+                    { x: 10, y: 490 },
+                    { x: 10, y: 100 },
+                    { x: 40, y: 100 }
                 ]
             }
         ]
@@ -142,137 +228,203 @@ const instructionPaths = {
 
     I: {
         color: 'i',
-        components: ['pc', 'sum-pc4', 'mux-pc', 'mem-instr', 'decoder', 'control-unit', 'sign-ext', 'reg-bank', 'mux-alu', 'alu', 'mux-wb'],
+        components: ['pc', 'mem-prog', 'decoder', 'control-unit', 'sign-ext', 'reg-bank', 'mux-d1', 'alu', 'mux-wb', 'sum-pc4', 'mux-pc'],
         connections: [
+            // PC -> Memoria de Programa
             {
                 from: 'pc', fromPort: 'pc_out',
-                to: 'sum-pc4', toPort: 'pc_in',
-                waypoints: []
-            },
-            {
-                from: 'sum-pc4', fromPort: 'pc4_out',
-                to: 'mux-pc', toPort: 'pc_normal',
+                to: 'mem-prog', toPort: 'addr_prog',
                 waypoints: [
-                    { x: 360, y: 90 },
-                    { x: 360, y: 30 },
-                    { x: 985, y: 30 },
-                    { x: 985, y: 40 }
+                    { x: 140, y: 100 },
+                    { x: 200, y: 100 }
                 ]
             },
+            // PC -> Sumador PC+4
             {
                 from: 'pc', fromPort: 'pc_out',
-                to: 'mem-instr', toPort: 'address',
+                to: 'sum-pc4', toPort: 'pc_4_in',
                 waypoints: [
-                    { x: 160, y: 90 },
-                    { x: 160, y: 160 },
-                    { x: 30, y: 160 },
-                    { x: 30, y: 210 },
-                    { x: 195, y: 210 }
+                    { x: 140, y: 100 },
+                    { x: 140, y: 240 },
+                    { x: 105, y: 240 },
+                    { x: 105, y: 270 }
                 ]
             },
+            // Memoria Programa -> Decodificador
             {
-                from: 'mem-instr', fromPort: 'instr_out',
+                from: 'mem-prog', fromPort: 'instr_prog',
                 to: 'decoder', toPort: 'instr_in',
                 waypoints: [
-                    { x: 280, y: 270 },
-                    { x: 360, y: 270 }
+                    { x: 270, y: 170 },
+                    { x: 270, y: 170 },
+                    { x: 400, y: 170 },
+                    { x: 400, y: 120 }
                 ]
             },
+            // Decodificador -> Unidad Control
+            {
+                from: 'decoder', fromPort: 'opcode_out',
+                to: 'control-unit', toPort: 'opcode_in',
+                waypoints: [
+                    { x: 500, y: 40 },
+                    { x: 500, y: 10 },
+                    { x: 800, y: 10 },
+                    { x: 800, y: 430 }
+                ]
+            },
+            // Decodificador -> Banco Registros (rs1)
             {
                 from: 'decoder', fromPort: 'rs1_out',
                 to: 'reg-bank', toPort: 'rs1_addr',
                 waypoints: [
-                    { x: 405, y: 360 },
-                    { x: 405, y: 380 },
-                    { x: 60, y: 380 },
-                    { x: 60, y: 420 },
-                    { x: 95, y: 420 }
+                    { x: 590, y: 153 },
+                    { x: 640, y: 153 },
+                    { x: 640, y: 230 },
+                    { x: 499, y: 230 }
                 ]
             },
-            {
-                from: 'decoder', fromPort: 'imm_out',
-                to: 'control-unit', toPort: 'opcode_in',
-                waypoints: [
-                    { x: 520, y: 280 },
-                    { x: 560, y: 280 },
-                    { x: 560, y: 150 },
-                    { x: 510, y: 150 }
-                ]
-            },
+            // Decodificador -> Sign Extend
             {
                 from: 'decoder', fromPort: 'imm_out',
                 to: 'sign-ext', toPort: 'imm_in',
                 waypoints: [
-                    { x: 520, y: 280 },
-                    { x: 610, y: 280 }
+                    { x: 590, y: 85 },
+                    { x: 640, y: 85 },
+                    { x: 640, y: 105 }
                 ]
             },
+            // Decodificador -> Banco de Registro
             {
-                from: 'reg-bank', fromPort: 'rs1_data',
-                to: 'alu', toPort: 'op1',
+                from: 'decoder', fromPort: 'imm_out',
+                to: 'reg-bank', toPort: 'wr_addr',
                 waypoints: [
-                    { x: 210, y: 479 },
-                    { x: 230, y: 479 },
-                    { x: 230, y: 600 },
-                    { x: 460, y: 600 },
-                    { x: 460, y: 472 },
-                    { x: 480, y: 472 }
+                    { x: 590, y: 85 },
+                    { x: 630, y: 85 },
+                    { x: 630, y: 430 },
+                    { x: 420, y: 430 },
+                    { x: 420, y: 373 },
+                    { x: 440, y: 373 }
                 ]
             },
+            // Sign Extend -> MUX d1
             {
                 from: 'sign-ext', fromPort: 'imm_ext',
-                to: 'mux-alu', toPort: 'mux_imm',
+                to: 'mux-d1', toPort: 'd1_imm',
                 waypoints: [
-                    { x: 685, y: 320 },
-                    { x: 685, y: 360 },
-                    { x: 360, y: 360 },
-                    { x: 360, y: 440 }
+                    { x: 770, y: 105 },
+                    { x: 800, y: 105 },
+                    { x: 800, y: 180 },
+                    { x: 680, y: 180 },
+                    { x: 680, y: 232 }
                 ]
             },
+            // Banco Registros do1 -> ALU op1
             {
-                from: 'mux-alu', fromPort: 'mux_out',
+                from: 'reg-bank', fromPort: 'do1_out',
+                to: 'alu', toPort: 'op1',
+                waypoints: [
+                    { x: 620, y: 306 },
+                    { x: 660, y: 306 },
+                    { x: 660, y: 300 },
+                    { x: 780, y: 300 },
+                    { x: 780, y: 286 },
+                    { x: 790, y: 286 }
+                ]
+            },
+            // MUX d1 -> ALU op2
+            {
+                from: 'mux-d1', fromPort: 'd1_out',
                 to: 'alu', toPort: 'op2',
                 waypoints: [
-                    { x: 410, y: 495 },
-                    { x: 440, y: 495 },
-                    { x: 440, y: 508 },
-                    { x: 480, y: 508 }
+                    { x: 740, y: 250 },
+                    { x: 770, y: 250 },
+                    { x: 770, y: 334 },
+                    { x: 790, y: 334 }
                 ]
             },
+            // ALU -> MUX WB
             {
                 from: 'alu', fromPort: 'alu_result',
                 to: 'mux-wb', toPort: 'wb_alu',
                 waypoints: [
-                    { x: 660, y: 490 },
-                    { x: 700, y: 490 },
-                    { x: 700, y: 420 },
-                    { x: 930, y: 420 },
-                    { x: 930, y: 486 },
-                    { x: 950, y: 486 }
+                    { x: 910, y: 310 },
+                    { x: 960, y: 310 },
+                    { x: 960, y: 420 }
                 ]
             },
+            // Unidad Control -> Banco Registros (RegWrite)
+            {
+                from: 'control-unit', fromPort: 'cu_out1',
+                to: 'reg-bank', toPort: 'reg_write',
+                waypoints: [
+                    { x: 720, y: 473 },
+                    { x: 483, y: 473 }
+                ]
+            },
+            // Unidad Control -> MUX d1 (ALUSrc)
+            {
+                from: 'control-unit', fromPort: 'cu_out2',
+                to: 'mux-d1', toPort: 'd1_control',
+                waypoints: [
+                    { x: 670, y: 500 },
+                    { x: 670, y: 200 },
+                    { x: 705, y: 200 }
+                ]
+            },
+            // Unidad Control -> MUX WB (MemtoReg)
+            {
+                from: 'control-unit', fromPort: 'cu_out3',
+                to: 'mux-wb', toPort: 'wb_control',
+                waypoints: [
+                    { x: 720, y: 522 },
+                    { x: 720, y: 580 },
+                    { x: 1040, y: 580 },
+                    { x: 1040, y: 419 }
+                ]
+            },
+            // Unidad Control -> ALU (ALUOp)
+            {
+                from: 'control-unit', fromPort: 'cu_out4',
+                to: 'alu', toPort: 'alu_control',
+                waypoints: [
+                    { x: 880, y: 473 },
+                    { x: 900, y: 473 },
+                    { x: 900, y: 380 },
+                    { x: 850, y: 380 }
+                ]
+            },
+            // MUX WB -> Banco Registros
             {
                 from: 'mux-wb', fromPort: 'wb_out',
                 to: 'reg-bank', toPort: 'wr_data',
                 waypoints: [
-                    { x: 1000, y: 550 },
-                    { x: 1000, y: 700 },
-                    { x: 15, y: 700 },
-                    { x: 15, y: 580 },
-                    { x: 125, y: 580 }
+                    { x: 1005, y: 470 },
+                    { x: 1005, y: 590 },
+                    { x: 380, y: 590 },
+                    { x: 380, y: 420 },
+                    { x: 578, y: 420 }
                 ]
             },
+            // Sumador PC+4 -> MUX PC
+            {
+                from: 'sum-pc4', fromPort: 'pc4_out',
+                to: 'mux-pc', toPort: 'pc_normal',
+                waypoints: [
+                    { x: 150, y: 315 },
+                    { x: 155, y: 315 },
+                    { x: 155, y: 350 }
+                ]
+            },
+            // MUX PC -> PC
             {
                 from: 'mux-pc', fromPort: 'pc_next',
                 to: 'pc', toPort: 'pc_in',
                 waypoints: [
-                    { x: 985, y: 140 },
-                    { x: 985, y: 160 },
-                    { x: 1080, y: 160 },
-                    { x: 1080, y: 660 },
-                    { x: 10, y: 660 },
-                    { x: 10, y: 140 },
-                    { x: 100, y: 140 }
+                    { x: 125, y: 450 },
+                    { x: 125, y: 490 },
+                    { x: 10, y: 490 },
+                    { x: 10, y: 100 },
+                    { x: 40, y: 100 }
                 ]
             }
         ]
@@ -280,140 +432,226 @@ const instructionPaths = {
 
     L: {
         color: 'l',
-        components: ['pc', 'sum-pc4', 'mux-pc', 'mem-instr', 'decoder', 'control-unit', 'sign-ext', 'reg-bank', 'mux-alu', 'alu', 'mem-data', 'mux-wb'],
+        components: ['pc', 'mem-prog', 'decoder', 'control-unit', 'sign-ext', 'reg-bank', 'mux-d1', 'alu', 'mem-data', 'mux-wb', 'sum-pc4', 'mux-pc'],
         connections: [
+            // PC -> Memoria de Programa
             {
                 from: 'pc', fromPort: 'pc_out',
-                to: 'sum-pc4', toPort: 'pc_in',
-                waypoints: []
-            },
-            {
-                from: 'sum-pc4', fromPort: 'pc4_out',
-                to: 'mux-pc', toPort: 'pc_normal',
+                to: 'mem-prog', toPort: 'addr_prog',
                 waypoints: [
-                    { x: 360, y: 90 },
-                    { x: 360, y: 30 },
-                    { x: 985, y: 30 },
-                    { x: 985, y: 40 }
+                    { x: 140, y: 100 },
+                    { x: 200, y: 100 }
                 ]
             },
+            // PC -> Sumador PC+4
             {
                 from: 'pc', fromPort: 'pc_out',
-                to: 'mem-instr', toPort: 'address',
+                to: 'sum-pc4', toPort: 'pc_4_in',
                 waypoints: [
-                    { x: 160, y: 90 },
-                    { x: 160, y: 160 },
-                    { x: 30, y: 160 },
-                    { x: 30, y: 210 },
-                    { x: 195, y: 210 }
+                    { x: 140, y: 100 },
+                    { x: 140, y: 240 },
+                    { x: 105, y: 240 },
+                    { x: 105, y: 270 }
                 ]
             },
+            // Memoria Programa -> Decodificador
             {
-                from: 'mem-instr', fromPort: 'instr_out',
+                from: 'mem-prog', fromPort: 'instr_prog',
                 to: 'decoder', toPort: 'instr_in',
                 waypoints: [
-                    { x: 280, y: 270 },
-                    { x: 360, y: 270 }
+                    { x: 270, y: 170 },
+                    { x: 270, y: 170 },
+                    { x: 400, y: 170 },
+                    { x: 400, y: 120 }
                 ]
             },
+            // Decodificador -> Unidad Control
+            {
+                from: 'decoder', fromPort: 'opcode_out',
+                to: 'control-unit', toPort: 'opcode_in',
+                waypoints: [
+                    { x: 500, y: 40 },
+                    { x: 500, y: 10 },
+                    { x: 800, y: 10 },
+                    { x: 800, y: 430 }
+                ]
+            },
+            // Decodificador -> Banco Registros (rs1)
             {
                 from: 'decoder', fromPort: 'rs1_out',
                 to: 'reg-bank', toPort: 'rs1_addr',
                 waypoints: [
-                    { x: 405, y: 360 },
-                    { x: 405, y: 380 },
-                    { x: 60, y: 380 },
-                    { x: 60, y: 420 },
-                    { x: 95, y: 420 }
+                    { x: 590, y: 153 },
+                    { x: 640, y: 153 },
+                    { x: 640, y: 230 },
+                    { x: 499, y: 230 }
                 ]
             },
-            {
-                from: 'decoder', fromPort: 'imm_out',
-                to: 'control-unit', toPort: 'opcode_in',
-                waypoints: [
-                    { x: 520, y: 280 },
-                    { x: 560, y: 280 },
-                    { x: 560, y: 150 },
-                    { x: 510, y: 150 }
-                ]
-            },
+            // Decodificador -> Sign Extend
             {
                 from: 'decoder', fromPort: 'imm_out',
                 to: 'sign-ext', toPort: 'imm_in',
                 waypoints: [
-                    { x: 520, y: 280 },
-                    { x: 610, y: 280 }
+                    { x: 590, y: 85 },
+                    { x: 640, y: 85 },
+                    { x: 640, y: 105 }
                 ]
             },
+            // Decodificador -> Banco de Registro
             {
-                from: 'reg-bank', fromPort: 'rs1_data',
-                to: 'alu', toPort: 'op1',
+                from: 'decoder', fromPort: 'imm_out',
+                to: 'reg-bank', toPort: 'wr_addr',
                 waypoints: [
-                    { x: 210, y: 479 },
-                    { x: 230, y: 479 },
-                    { x: 230, y: 600 },
-                    { x: 460, y: 600 },
-                    { x: 460, y: 472 },
-                    { x: 480, y: 472 }
+                    { x: 590, y: 85 },
+                    { x: 630, y: 85 },
+                    { x: 630, y: 430 },
+                    { x: 420, y: 430 },
+                    { x: 420, y: 373 },
+                    { x: 440, y: 373 }
                 ]
             },
+            // Sign Extend -> MUX d1
             {
                 from: 'sign-ext', fromPort: 'imm_ext',
-                to: 'mux-alu', toPort: 'mux_imm',
+                to: 'mux-d1', toPort: 'd1_imm',
                 waypoints: [
-                    { x: 685, y: 320 },
-                    { x: 685, y: 360 },
-                    { x: 360, y: 360 },
-                    { x: 360, y: 440 }
+                    { x: 770, y: 105 },
+                    { x: 800, y: 105 },
+                    { x: 800, y: 180 },
+                    { x: 680, y: 180 },
+                    { x: 680, y: 232 }
                 ]
             },
+            // Banco Registros -> ALU
             {
-                from: 'mux-alu', fromPort: 'mux_out',
+                from: 'reg-bank', fromPort: 'do1_out',
+                to: 'alu', toPort: 'op1',
+                waypoints: [
+                    { x: 620, y: 306 },
+                    { x: 660, y: 306 },
+                    { x: 660, y: 300 },
+                    { x: 780, y: 300 },
+                    { x: 780, y: 286 },
+                    { x: 790, y: 286 }
+                ]
+            },
+            // MUX d1 -> ALU
+            {
+                from: 'mux-d1', fromPort: 'd1_out',
                 to: 'alu', toPort: 'op2',
                 waypoints: [
-                    { x: 410, y: 495 },
-                    { x: 440, y: 495 },
-                    { x: 440, y: 508 },
-                    { x: 480, y: 508 }
+                    { x: 740, y: 250 },
+                    { x: 770, y: 250 },
+                    { x: 770, y: 334 },
+                    { x: 790, y: 334 }
                 ]
             },
+            // ALU -> Memoria Datos (dirección)
             {
                 from: 'alu', fromPort: 'alu_result',
                 to: 'mem-data', toPort: 'addr_in',
                 waypoints: [
-                    { x: 660, y: 490 },
-                    { x: 680, y: 490 },
-                    { x: 680, y: 480 },
-                    { x: 730, y: 480 }
+                    { x: 910, y: 310 },
+                    { x: 950, y: 310 },
+                    { x: 950, y: 162 },
+                    { x: 970, y: 162 }
                 ]
             },
+            // Memoria Datos -> MUX WB
             {
                 from: 'mem-data', fromPort: 'data_out',
                 to: 'mux-wb', toPort: 'wb_mem',
-                waypoints: []
+                waypoints: [
+                    { x: 1050, y: 340 },
+                    { x: 1050, y: 365 },
+                    { x: 1005, y: 365 },
+                    { x: 1005, y: 370 }
+                ]
             },
+            // MUX WB -> Banco Registros
             {
                 from: 'mux-wb', fromPort: 'wb_out',
                 to: 'reg-bank', toPort: 'wr_data',
                 waypoints: [
-                    { x: 1000, y: 550 },
-                    { x: 1000, y: 700 },
-                    { x: 15, y: 700 },
-                    { x: 15, y: 580 },
-                    { x: 125, y: 580 }
+                    { x: 1005, y: 470 },
+                    { x: 1005, y: 590 },
+                    { x: 380, y: 590 },
+                    { x: 380, y: 420 },
+                    { x: 578, y: 420 }
                 ]
             },
+            // Unidad Control -> Banco Registros (RegWrite)
+            {
+                from: 'control-unit', fromPort: 'cu_out1',
+                to: 'reg-bank', toPort: 'reg_write',
+                waypoints: [
+                    { x: 720, y: 473 },
+                    { x: 483, y: 473 }
+                ]
+            },
+            // Unidad Control -> MUX d1 (ALUSrc)
+            {
+                from: 'control-unit', fromPort: 'cu_out2',
+                to: 'mux-d1', toPort: 'd1_control',
+                waypoints: [
+                    { x: 670, y: 500 },
+                    { x: 670, y: 200 },
+                    { x: 705, y: 200 }
+                ]
+            },
+            // Unidad Control -> Memoria Datos (MemRead)
+            {
+                from: 'control-unit', fromPort: 'cu_out5',
+                to: 'mem-data', toPort: 'mem_read',
+                waypoints: [
+                    { x: 880, y: 500 },
+                    { x: 1150, y: 500 },
+                    { x: 1150, y: 40 },
+                    { x: 1050, y: 40 }
+                ]
+            },
+            // Unidad Control -> MUX WB (MemtoReg)
+            {
+                from: 'control-unit', fromPort: 'cu_out3',
+                to: 'mux-wb', toPort: 'wb_control',
+                waypoints: [
+                    { x: 720, y: 522 },
+                    { x: 720, y: 580 },
+                    { x: 1040, y: 580 },
+                    { x: 1040, y: 419 }
+                ]
+            },
+            // Unidad Control -> ALU (ALUOp)
+            {
+                from: 'control-unit', fromPort: 'cu_out4',
+                to: 'alu', toPort: 'alu_control',
+                waypoints: [
+                    { x: 880, y: 473 },
+                    { x: 900, y: 473 },
+                    { x: 900, y: 380 },
+                    { x: 850, y: 380 }
+                ]
+            },
+            // Sumador PC+4 -> MUX PC
+            {
+                from: 'sum-pc4', fromPort: 'pc4_out',
+                to: 'mux-pc', toPort: 'pc_normal',
+                waypoints: [
+                    { x: 150, y: 315 },
+                    { x: 155, y: 315 },
+                    { x: 155, y: 350 }
+                ]
+            },
+            // MUX PC -> PC
             {
                 from: 'mux-pc', fromPort: 'pc_next',
                 to: 'pc', toPort: 'pc_in',
                 waypoints: [
-                    { x: 985, y: 140 },
-                    { x: 985, y: 160 },
-                    { x: 1080, y: 160 },
-                    { x: 1080, y: 660 },
-                    { x: 10, y: 660 },
-                    { x: 10, y: 140 },
-                    { x: 100, y: 140 }
+                    { x: 125, y: 450 },
+                    { x: 125, y: 490 },
+                    { x: 10, y: 490 },
+                    { x: 10, y: 100 },
+                    { x: 40, y: 100 }
                 ]
             }
         ]
@@ -421,147 +659,194 @@ const instructionPaths = {
 
     S: {
         color: 's',
-        components: ['pc', 'sum-pc4', 'mux-pc', 'mem-instr', 'decoder', 'control-unit', 'sign-ext', 'reg-bank', 'mux-alu', 'alu', 'mem-data'],
+        components: ['pc', 'mem-prog', 'decoder', 'control-unit', 'sign-ext', 'reg-bank', 'mux-d1', 'alu', 'mem-data', 'sum-pc4', 'mux-pc'],
         connections: [
+            // PC -> Memoria de Programa
             {
                 from: 'pc', fromPort: 'pc_out',
-                to: 'sum-pc4', toPort: 'pc_in',
-                waypoints: []
-            },
-            {
-                from: 'sum-pc4', fromPort: 'pc4_out',
-                to: 'mux-pc', toPort: 'pc_normal',
+                to: 'mem-prog', toPort: 'addr_prog',
                 waypoints: [
-                    { x: 360, y: 90 },
-                    { x: 360, y: 30 },
-                    { x: 985, y: 30 },
-                    { x: 985, y: 40 }
+                    { x: 140, y: 100 },
+                    { x: 200, y: 100 }
                 ]
             },
+            // PC -> Sumador PC+4
             {
                 from: 'pc', fromPort: 'pc_out',
-                to: 'mem-instr', toPort: 'address',
+                to: 'sum-pc4', toPort: 'pc_4_in',
                 waypoints: [
-                    { x: 160, y: 90 },
-                    { x: 160, y: 160 },
-                    { x: 30, y: 160 },
-                    { x: 30, y: 210 },
-                    { x: 195, y: 210 }
+                    { x: 140, y: 100 },
+                    { x: 140, y: 240 },
+                    { x: 105, y: 240 },
+                    { x: 105, y: 270 }
                 ]
             },
+            // Memoria Programa -> Decodificador
             {
-                from: 'mem-instr', fromPort: 'instr_out',
+                from: 'mem-prog', fromPort: 'instr_prog',
                 to: 'decoder', toPort: 'instr_in',
                 waypoints: [
-                    { x: 280, y: 270 },
-                    { x: 360, y: 270 }
+                    { x: 270, y: 170 },
+                    { x: 270, y: 170 },
+                    { x: 400, y: 170 },
+                    { x: 400, y: 120 }
                 ]
             },
+            // Decodificador -> Unidad Control
+            {
+                from: 'decoder', fromPort: 'opcode_out',
+                to: 'control-unit', toPort: 'opcode_in',
+                waypoints: [
+                    { x: 500, y: 40 },
+                    { x: 500, y: 10 },
+                    { x: 800, y: 10 },
+                    { x: 800, y: 430 }
+                ]
+            },
+            // Decodificador -> Banco Registros (rs1)
             {
                 from: 'decoder', fromPort: 'rs1_out',
                 to: 'reg-bank', toPort: 'rs1_addr',
                 waypoints: [
-                    { x: 405, y: 360 },
-                    { x: 405, y: 380 },
-                    { x: 60, y: 380 },
-                    { x: 60, y: 420 },
-                    { x: 95, y: 420 }
+                    { x: 590, y: 153 },
+                    { x: 640, y: 153 },
+                    { x: 640, y: 230 },
+                    { x: 499, y: 230 }
                 ]
             },
+            // Decodificador -> Banco Registros (rs2)
             {
                 from: 'decoder', fromPort: 'rs2_out',
                 to: 'reg-bank', toPort: 'rs2_addr',
                 waypoints: [
-                    { x: 440, y: 360 },
-                    { x: 440, y: 370 },
-                    { x: 45, y: 370 },
-                    { x: 45, y: 420 },
-                    { x: 155, y: 420 }
+                    { x: 590, y: 120 },
+                    { x: 630, y: 120 },
+                    { x: 630, y: 220 },
+                    { x: 546, y: 220 }
                 ]
             },
-            {
-                from: 'decoder', fromPort: 'imm_out',
-                to: 'control-unit', toPort: 'opcode_in',
-                waypoints: [
-                    { x: 520, y: 280 },
-                    { x: 560, y: 280 },
-                    { x: 560, y: 150 },
-                    { x: 510, y: 150 }
-                ]
-            },
+            // Decodificador -> Sign Extend
             {
                 from: 'decoder', fromPort: 'imm_out',
                 to: 'sign-ext', toPort: 'imm_in',
                 waypoints: [
-                    { x: 520, y: 280 },
-                    { x: 610, y: 280 }
+                    { x: 590, y: 85 },
+                    { x: 640, y: 85 },
+                    { x: 640, y: 105 }
                 ]
             },
-            {
-                from: 'reg-bank', fromPort: 'rs1_data',
-                to: 'alu', toPort: 'op1',
-                waypoints: [
-                    { x: 210, y: 479 },
-                    { x: 230, y: 479 },
-                    { x: 230, y: 600 },
-                    { x: 460, y: 600 },
-                    { x: 460, y: 472 },
-                    { x: 480, y: 472 }
-                ]
-            },
+            // Sign Extend -> MUX d1
             {
                 from: 'sign-ext', fromPort: 'imm_ext',
-                to: 'mux-alu', toPort: 'mux_imm',
+                to: 'mux-d1', toPort: 'd1_imm',
                 waypoints: [
-                    { x: 685, y: 320 },
-                    { x: 685, y: 360 },
-                    { x: 360, y: 360 },
-                    { x: 360, y: 440 }
+                    { x: 770, y: 105 },
+                    { x: 800, y: 105 },
+                    { x: 800, y: 180 },
+                    { x: 680, y: 180 },
+                    { x: 680, y: 232 }
                 ]
             },
+            // Banco Registros do1 -> ALU
             {
-                from: 'mux-alu', fromPort: 'mux_out',
+                from: 'reg-bank', fromPort: 'do1_out',
+                to: 'alu', toPort: 'op1',
+                waypoints: [
+                    { x: 620, y: 306 },
+                    { x: 660, y: 306 },
+                    { x: 660, y: 300 },
+                    { x: 780, y: 300 },
+                    { x: 780, y: 286 },
+                    { x: 790, y: 286 }
+                ]
+            },
+            // MUX d1 -> ALU op2
+            {
+                from: 'mux-d1', fromPort: 'd1_out',
                 to: 'alu', toPort: 'op2',
                 waypoints: [
-                    { x: 410, y: 495 },
-                    { x: 440, y: 495 },
-                    { x: 440, y: 508 },
-                    { x: 480, y: 508 }
+                    { x: 740, y: 250 },
+                    { x: 770, y: 250 },
+                    { x: 770, y: 334 },
+                    { x: 790, y: 334 }
                 ]
             },
+            // Banco Registros do2 -> Memoria Datos (dato) - RODEA POR ABAJO DE LA ALU
+            {
+                from: 'reg-bank', fromPort: 'do2_out',
+                to: 'mem-data', toPort: 'data_in',
+                waypoints: [
+                    { x: 620, y: 338 },
+                    { x: 650, y: 338 },
+                    { x: 650, y: 410 },
+                    { x: 930, y: 410 },
+                    { x: 930, y: 218 },
+                    { x: 970, y: 218 }
+                ]
+            },
+            // ALU -> Memoria Datos (dirección)
             {
                 from: 'alu', fromPort: 'alu_result',
                 to: 'mem-data', toPort: 'addr_in',
                 waypoints: [
-                    { x: 660, y: 490 },
-                    { x: 680, y: 490 },
-                    { x: 680, y: 480 },
-                    { x: 730, y: 480 }
+                    { x: 910, y: 310 },
+                    { x: 950, y: 310 },
+                    { x: 950, y: 162 },
+                    { x: 970, y: 162 }
                 ]
             },
+            // Sumador PC+4 -> MUX PC
             {
-                from: 'reg-bank', fromPort: 'rs2_data',
-                to: 'mem-data', toPort: 'data_in',
+                from: 'sum-pc4', fromPort: 'pc4_out',
+                to: 'mux-pc', toPort: 'pc_normal',
                 waypoints: [
-                    { x: 210, y: 521 },
-                    { x: 240, y: 521 },
-                    { x: 240, y: 680 },
-                    { x: 700, y: 680 },
-                    { x: 700, y: 570 },
-                    { x: 700, y: 470 }
+                    { x: 150, y: 315 },
+                    { x: 155, y: 315 },
+                    { x: 155, y: 350 }
                 ]
             },
+            // Unidad Control -> MUX d1 (ALUSrc)
+            {
+                from: 'control-unit', fromPort: 'cu_out2',
+                to: 'mux-d1', toPort: 'd1_control',
+                waypoints: [
+                    { x: 670, y: 500 },
+                    { x: 670, y: 200 },
+                    { x: 705, y: 200 }
+                ]
+            },
+            // Unidad Control -> Memoria Datos (MemWrite)
+            {
+                from: 'control-unit', fromPort: 'cu_out6',
+                to: 'mem-data', toPort: 'mem_write',
+                waypoints: [
+                    { x: 880, y: 527 },
+                    { x: 950, y: 527 },
+                    { x: 950, y: 40 },
+                    { x: 1009, y: 40}
+                ]
+            },
+            // Unidad Control -> ALU (ALUOp)
+            {
+                from: 'control-unit', fromPort: 'cu_out4',
+                to: 'alu', toPort: 'alu_control',
+                waypoints: [
+                    { x: 880, y: 473 },
+                    { x: 900, y: 473 },
+                    { x: 900, y: 380 },
+                    { x: 850, y: 380 }
+                ]
+            },
+            // MUX PC -> PC
             {
                 from: 'mux-pc', fromPort: 'pc_next',
                 to: 'pc', toPort: 'pc_in',
                 waypoints: [
-                    { x: 985, y: 140 },
-                    { x: 985, y: 160 },
-                    { x: 1080, y: 160 },
-                    { x: 1080, y: 660 },
-                    { x: 10, y: 660 },
-                    { x: 10, y: 140 },
-                    { x: 100, y: 140 }
+                    { x: 125, y: 450 },
+                    { x: 125, y: 490 },
+                    { x: 10, y: 490 },
+                    { x: 10, y: 100 },
+                    { x: 40, y: 100 }
                 ]
             }
         ]
@@ -569,153 +854,213 @@ const instructionPaths = {
 
     B: {
         color: 'b',
-        components: ['pc', 'sum-pc4', 'sum-branch', 'mux-pc', 'mem-instr', 'decoder', 'control-unit', 'sign-ext', 'reg-bank', 'mux-alu', 'alu'],
+        components: ['pc', 'mem-prog', 'orden-sign', 'sum-branch', 'and-gate', 'mux-pc', 'decoder', 'control-unit', 'reg-bank', 'mux-d1', 'alu', 'sum-pc4'],
         connections: [
+            // PC -> Memoria de Programa
             {
                 from: 'pc', fromPort: 'pc_out',
-                to: 'sum-pc4', toPort: 'pc_in',
-                waypoints: []
-            },
-            {
-                from: 'sum-pc4', fromPort: 'pc4_out',
-                to: 'mux-pc', toPort: 'pc_normal',
+                to: 'mem-prog', toPort: 'addr_prog',
                 waypoints: [
-                    { x: 360, y: 90 },
-                    { x: 360, y: 30 },
-                    { x: 985, y: 30 },
-                    { x: 985, y: 40 }
+                    { x: 140, y: 100 },
+                    { x: 200, y: 100 }
                 ]
             },
+            // PC -> Sumador PC+4
+            {
+                from: 'pc', fromPort: 'pc_out',
+                to: 'sum-pc4', toPort: 'pc_4_in',
+                waypoints: [
+                    { x: 140, y: 100 },
+                    { x: 140, y: 240 },
+                    { x: 105, y: 240 },
+                    { x: 105, y: 270 }
+                ]
+            },
+            // PC -> Sumador Branch
             {
                 from: 'pc', fromPort: 'pc_out',
                 to: 'sum-branch', toPort: 'pc_branch',
                 waypoints: [
-                    { x: 160, y: 90 },
-                    { x: 160, y: 15 },
-                    { x: 710, y: 15 },
-                    { x: 710, y: 90 }
+                    { x: 140, y: 100 },
+                    { x: 140, y: 250 },
+                    { x: 305, y: 250 },
+                    { x: 305, y: 250 }
                 ]
             },
+            // Memoria Programa -> Orden & Sign Extend
             {
-                from: 'pc', fromPort: 'pc_out',
-                to: 'mem-instr', toPort: 'address',
+                from: 'mem-prog', fromPort: 'instr_prog',
+                to: 'orden-sign', toPort: 'instr_orden',
                 waypoints: [
-                    { x: 160, y: 90 },
-                    { x: 160, y: 160 },
-                    { x: 30, y: 160 },
-                    { x: 30, y: 210 },
-                    { x: 195, y: 210 }
+                    { x: 270, y: 170 }
                 ]
             },
+            // Orden & Sign Extend -> Sumador Branch
             {
-                from: 'mem-instr', fromPort: 'instr_out',
+                from: 'orden-sign', fromPort: 'offset_out',
+                to: 'sum-branch', toPort: 'offset_branch',
+                waypoints: [
+                    { x: 270, y: 250 },
+                    { x: 270, y: 255 },
+                    { x: 350, y: 255 },
+                    { x: 350, y: 295 }
+                ]
+            },
+            // Memoria Programa -> Decodificador
+            {
+                from: 'mem-prog', fromPort: 'instr_prog',
                 to: 'decoder', toPort: 'instr_in',
                 waypoints: [
-                    { x: 280, y: 270 },
-                    { x: 360, y: 270 }
+                    { x: 270, y: 170 },
+                    { x: 270, y: 170 },
+                    { x: 400, y: 170 },
+                    { x: 400, y: 120 }
                 ]
             },
+            // Decodificador -> Unidad Control
+            {
+                from: 'decoder', fromPort: 'opcode_out',
+                to: 'control-unit', toPort: 'opcode_in',
+                waypoints: [
+                    { x: 500, y: 40 },
+                    { x: 500, y: 10 },
+                    { x: 800, y: 10 },
+                    { x: 800, y: 430 }
+                ]
+            },
+            // Decodificador -> Banco Registros (rs1)
             {
                 from: 'decoder', fromPort: 'rs1_out',
                 to: 'reg-bank', toPort: 'rs1_addr',
                 waypoints: [
-                    { x: 405, y: 360 },
-                    { x: 405, y: 380 },
-                    { x: 60, y: 380 },
-                    { x: 60, y: 420 },
-                    { x: 95, y: 420 }
+                    { x: 590, y: 153 },
+                    { x: 640, y: 153 },
+                    { x: 640, y: 230 },
+                    { x: 499, y: 230 }
                 ]
             },
+            //Unidad de Control -> AND
+            {
+                from: 'control-unit', fromPort: 'cu_out1',
+                to: 'and-gate', toPort: 'and_in1',
+                waypoints: [
+                    { x: 720, y: 473 },
+                    { x: 170, y: 473 },
+                    { x: 170, y: 303 }
+                ]
+            },
+            //AND -> MUXPC
+            {
+                from: 'and-gate', fromPort: 'and_out',
+                to: 'mux-pc', toPort: 'pc_normal',
+                waypoints: [
+                    { x: 240, y: 310 },
+                    { x: 240, y: 400 },
+                    { x: 110, y: 400 },
+                    { x: 110, y: 390 }
+                ]
+            },
+            // Decodificador -> Banco Registros (rs2)
             {
                 from: 'decoder', fromPort: 'rs2_out',
                 to: 'reg-bank', toPort: 'rs2_addr',
                 waypoints: [
-                    { x: 440, y: 360 },
-                    { x: 440, y: 370 },
-                    { x: 45, y: 370 },
-                    { x: 45, y: 420 },
-                    { x: 155, y: 420 }
+                    { x: 590, y: 120 },
+                    { x: 630, y: 120 },
+                    { x: 630, y: 220 },
+                    { x: 546, y: 220 }
                 ]
             },
+            // Banco Registros do1 -> ALU
             {
-                from: 'decoder', fromPort: 'imm_out',
-                to: 'control-unit', toPort: 'opcode_in',
-                waypoints: [
-                    { x: 520, y: 280 },
-                    { x: 560, y: 280 },
-                    { x: 560, y: 150 },
-                    { x: 510, y: 150 }
-                ]
-            },
-            {
-                from: 'decoder', fromPort: 'imm_out',
-                to: 'sign-ext', toPort: 'imm_in',
-                waypoints: [
-                    { x: 520, y: 280 },
-                    { x: 610, y: 280 }
-                ]
-            },
-            {
-                from: 'reg-bank', fromPort: 'rs1_data',
+                from: 'reg-bank', fromPort: 'do1_out',
                 to: 'alu', toPort: 'op1',
                 waypoints: [
-                    { x: 210, y: 479 },
-                    { x: 230, y: 479 },
-                    { x: 230, y: 600 },
-                    { x: 460, y: 600 },
-                    { x: 460, y: 472 },
-                    { x: 480, y: 472 }
+                    { x: 620, y: 306 },
+                    { x: 660, y: 306 },
+                    { x: 660, y: 300 },
+                    { x: 780, y: 300 },
+                    { x: 780, y: 286 },
+                    { x: 790, y: 286 }
                 ]
             },
+            // Banco Registros do2 -> MUX d1
             {
-                from: 'reg-bank', fromPort: 'rs2_data',
-                to: 'mux-alu', toPort: 'mux_rs2',
+                from: 'reg-bank', fromPort: 'do2_out',
+                to: 'mux-d1', toPort: 'd1_do2',
                 waypoints: [
-                    { x: 210, y: 521 },
-                    { x: 280, y: 521 },
-                    { x: 280, y: 482 },
-                    { x: 310, y: 482 }
+                    { x: 620, y: 338 },
+                    { x: 650, y: 338 },
+                    { x: 650, y: 338 },
+                    { x: 705, y: 338 },
+                    { x: 705, y: 300 }
                 ]
             },
+            // MUX d1 -> ALU
             {
-                from: 'mux-alu', fromPort: 'mux_out',
+                from: 'mux-d1', fromPort: 'd1_out',
                 to: 'alu', toPort: 'op2',
                 waypoints: [
-                    { x: 410, y: 495 },
-                    { x: 440, y: 495 },
-                    { x: 440, y: 508 },
-                    { x: 480, y: 508 }
+                    { x: 740, y: 250 },
+                    { x: 770, y: 250 },
+                    { x: 770, y: 334 },
+                    { x: 790, y: 334 }
                 ]
             },
+            // ALU Zero -> AND gate - RODEA TODO POR ARRIBA
             {
-                from: 'sign-ext', fromPort: 'imm_ext',
-                to: 'sum-branch', toPort: 'offset_branch',
+                from: 'alu', fromPort: 'alu_zero',
+                to: 'and-gate', toPort: 'and_in2',
                 waypoints: [
-                    { x: 685, y: 320 },
-                    { x: 685, y: 340 },
-                    { x: 795, y: 340 },
-                    { x: 795, y: 150 }
+                    { x: 850, y: 240 },
+                    { x: 850, y: 200 },
+                    { x: 400, y: 200 },
+                    { x: 400, y: 380 },
+                    { x: 180, y: 380 },
+                    { x: 180, y: 317 }
                 ]
             },
+            // Sumador Branch -> MUX PC
             {
                 from: 'sum-branch', fromPort: 'branch_result',
-                to: 'mux-pc', toPort: 'pc_branch',
+                to: 'mux-pc', toPort: 'pc_branch_in',
                 waypoints: [
-                    { x: 870, y: 90 },
-                    { x: 920, y: 90 }
+                    { x: 305, y: 340 },
+                    { x: 305, y: 400 },
+                    { x: 160, y: 400 }
                 ]
             },
+            // Unidad Control -> ALU (ALUOp)
+            {
+                from: 'control-unit', fromPort: 'cu_out4',
+                to: 'alu', toPort: 'alu_control',
+                waypoints: [
+                    { x: 880, y: 473 },
+                    { x: 900, y: 473 },
+                    { x: 900, y: 380 },
+                    { x: 850, y: 380 }
+                ]
+            },
+            // Sumador PC+4 -> MUX PC
+            {
+                from: 'sum-pc4', fromPort: 'pc4_out',
+                to: 'mux-pc', toPort: 'pc_normal',
+                waypoints: [
+                    { x: 150, y: 315 },
+                    { x: 155, y: 315 },
+                    { x: 155, y: 350 }
+                ]
+            },
+            // MUX PC -> PC
             {
                 from: 'mux-pc', fromPort: 'pc_next',
                 to: 'pc', toPort: 'pc_in',
                 waypoints: [
-                    { x: 985, y: 140 },
-                    { x: 985, y: 160 },
-                    { x: 1080, y: 160 },
-                    { x: 1080, y: 660 },
-                    { x: 10, y: 660 },
-                    { x: 10, y: 140 },
-                    { x: 100, y: 140 }
+                    { x: 125, y: 450 },
+                    { x: 125, y: 490 },
+                    { x: 10, y: 490 },
+                    { x: 10, y: 100 },
+                    { x: 40, y: 100 }
                 ]
             }
         ]
@@ -773,6 +1118,7 @@ function createConnectionLine(id, isStatic = false) {
 function drawAllStaticConnections() {
     document.querySelectorAll('.static-line').forEach(line => line.remove());
     staticConnectionCounter = 0;
+    
     Object.keys(instructionPaths).forEach(instrType => {
         const config = instructionPaths[instrType];
         
@@ -818,6 +1164,7 @@ function animateConnection(config) {
         const box = document.getElementById(compId);
         if (box) {
             box.classList.add(`active-${config.color}`);
+            box.classList.remove('pulsing');
             box.querySelectorAll('.port').forEach(p => p.classList.add(`active-${config.color}`));
         }
     });

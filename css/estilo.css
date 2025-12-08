@@ -97,32 +97,7 @@ body {
     font-size: 1.1em;
 }
 
-.main-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 30px;
-}
-
-.tab-view {
-    display: none;
-    animation: fadeIn 0.4s ease;
-}
-
-.tab-view.active {
-    display: block;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
+/* LAYOUT PRINCIPAL */
 .main-layout {
     display: flex;
     height: calc(100vh - 110px);
@@ -188,10 +163,10 @@ body {
     flex: 1;
     position: relative;
     overflow: auto;
-    padding: 100px;
-    transform: translateX(230px); /* AQUI ajustar esquema brooo */
+    padding: 50px;
+    padding-left: 100px;
+    transform: translateX(110px); /*muevelo aqui*/
 }
-
 
 #connections-svg {
     position: absolute;
@@ -206,10 +181,9 @@ body {
 .box {
     position: absolute;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 240, 240, 0.95) 100%);
-    border: 2px solid #fff;
-    border-radius: 4px;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.4),
-                inset 0 0 10px rgba(255, 255, 255, 0.2);
+    border: 2px solid #444;
+    border-radius: 6px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     z-index: 10 !important;
     transition: all 0.4s;
     display: flex;
@@ -217,19 +191,22 @@ body {
     justify-content: center;
 }
 
+.box.gate {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 240, 240, 0.95) 100%);
+    border-radius: 50%;
+}
+
 @keyframes pulse {
     0%, 100% {
-        box-shadow: 0 0 20px rgba(255, 255, 255, 0.4),
-                    inset 0 0 10px rgba(255, 255, 255, 0.2);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     }
     50% {
-        box-shadow: 0 0 35px rgba(255, 255, 255, 0.8),
-                    inset 0 0 20px rgba(255, 255, 255, 0.4);
+        box-shadow: 0 4px 20px rgba(255, 255, 255, 0.5);
     }
 }
 
 .box.pulsing {
-    animation: pulse 1.5s ease-in-out infinite;
+    animation: pulse 2s ease-in-out infinite;
 }
 
 .box-label {
@@ -248,10 +225,7 @@ body {
     padding: 2px;
 }
 
-.box-content {
-    display: none;
-}
-
+/* ESTILOS ACTIVOS DE CAJAS */
 .box.active-r {
     border-color: #ff0000 !important;
     background: linear-gradient(135deg, rgba(255, 220, 220, 0.95) 0%, rgba(255, 200, 200, 0.95) 100%) !important;
@@ -284,73 +258,83 @@ body {
 
 .port {
     position: absolute;
-    width: 12px;
-    height: 12px;
-    background: #fff;
+    width: 10px;
+    height: 10px;
+    background: #666;
     border: 2px solid #333;
     z-index: 12 !important;
     transition: all 0.3s;
 }
 
 .port-left {
-    left: -8px;
+    left: -7px;
+    top: 50%;
+    transform: translateY(-50%);
     border-radius: 50% 0 0 50%;
 }
 
 .port-right {
-    right: -8px;
+    right: -7px;
+    top: 50%;
+    transform: translateY(-50%);
     border-radius: 0 50% 50% 0;
 }
 
 .port-top {
-    top: -8px;
+    top: -7px;
     left: 50%;
     transform: translateX(-50%);
     border-radius: 50% 50% 0 0;
 }
 
 .port-bottom {
-    bottom: -8px;
+    bottom: -7px;
     left: 50%;
     transform: translateX(-50%);
     border-radius: 0 0 50% 50%;
 }
 
 .port-in {
-    background: #ddd;
-    border-color: #666;
+    background: #888;
+    border-color: #555;
 }
 
 .port-out {
-    background: #ddd;
+    background: #999;
     border-color: #666;
 }
 
 .port.active-r {
     background: #ff0000 !important;
     box-shadow: 0 0 15px #ff0000 !important;
+    border-color: #ff0000 !important;
 }
 
 .port.active-i {
     background: #0080ff !important;
     box-shadow: 0 0 15px #0080ff !important;
+    border-color: #0080ff !important;
 }
 
 .port.active-l {
     background: #00ff00 !important;
     box-shadow: 0 0 15px #00ff00 !important;
+    border-color: #00ff00 !important;
 }
 
 .port.active-s {
     background: #ff8000 !important;
     box-shadow: 0 0 15px #ff8000 !important;
+    border-color: #ff8000 !important;
 }
 
 .port.active-b {
     background: #ff00ff !important;
     box-shadow: 0 0 15px #ff00ff !important;
+    border-color: #ff00ff !important;
 }
 
+/* LÍNEAS DE CONEXIÓN */
 .connection-line {
     fill: none;
     stroke: rgba(255, 255, 255, 0.4);
@@ -359,39 +343,39 @@ body {
 }
 
 .static-line {
-    stroke: #374151;
-    stroke-width: 2;
+    stroke: #4a5568;
+    stroke-width: 1.5;
     fill: none;
-    opacity: 0.3;
+    opacity: 0.4;
 }
 
 .connection-line.active-r {
     stroke: #ff0000 !important;
-    stroke-width: 4 !important;
+    stroke-width: 3 !important;
     filter: drop-shadow(0 0 8px #ff0000) !important;
 }
 
 .connection-line.active-i {
     stroke: #0080ff !important;
-    stroke-width: 4 !important;
+    stroke-width: 3 !important;
     filter: drop-shadow(0 0 8px #0080ff) !important;
 }
 
 .connection-line.active-l {
     stroke: #00ff00 !important;
-    stroke-width: 4 !important;
+    stroke-width: 3 !important;
     filter: drop-shadow(0 0 8px #00ff00) !important;
 }
 
 .connection-line.active-s {
     stroke: #ff8000 !important;
-    stroke-width: 4 !important;
+    stroke-width: 3 !important;
     filter: drop-shadow(0 0 8px #ff8000) !important;
 }
 
 .connection-line.active-b {
     stroke: #ff00ff !important;
-    stroke-width: 4 !important;
+    stroke-width: 3 !important;
     filter: drop-shadow(0 0 8px #ff00ff) !important;
 }
 
