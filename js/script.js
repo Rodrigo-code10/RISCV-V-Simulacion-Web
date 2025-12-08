@@ -1237,3 +1237,122 @@ window.addEventListener('load', () => {
 });
 
 setInterval(loadCodeFromStorage, 1000);
+
+
+
+
+
+
+
+//MIO
+
+// Cargar programa desde localStorage
+const savedProgram = localStorage.getItem('assemblyJSON');
+let programObj = null;
+
+if (savedProgram) {
+    try {
+        programObj = JSON.parse(savedProgram);
+    } catch(e) {
+        console.error("Error parseando el programa:", e);
+    }
+}
+
+// Crear CPU
+const cpu = createCPU(programObj);
+
+// Tabla de ejecución
+const EXEC_TABLE = {
+    // R-type
+    add:  (c,a) => c.registers[R(a.args.rd)] = c.registers[R(a.args.rs1)] + c.registers[R(a.args.rs2)],
+    sub:  (c,a) => c.registers[R(a.args.rd)] = c.registers[R(a.args.rs1)] - c.registers[R(a.args.rs2)],
+    and:  (c,a) => c.registers[R(a.args.rd)] = c.registers[R(a.args.rs1)] & c.registers[R(a.args.rs2)],
+    or:   (c,a) => c.registers[R(a.args.rd)] = c.registers[R(a.args.rs1)] | c.registers[R(a.args.rs2)],
+    xor:  (c,a) => c.registers[R(a.args.rd)] = c.registers[R(a.args.rs1)] ^ c.registers[R(a.args.rs2)],
+    slt:  (c,a) => c.registers[R(a.args.rd)] = (c.registers[R(a.args.rs1)] < c.registers[R(a.args.rs2)]) ? 1 : 0,
+    sltu: (c,a) => c.registers[R(a.args.rd)] = ((c.registers[R(a.args.rs1)]>>>0) < (c.registers[R(a.args.rs2)]>>>0)) ? 1 : 0,
+    sll:  (c,a) => c.registers[R(a.args.rd)] = c.registers[R(a.args.rs1)] << (c.registers[R(a.args.rs2)] & 0x1F),
+    srl:  (c,a) => c.registers[R(a.args.rd)] = c.registers[R(a.args.rs1)] >>> (c.registers[R(a.args.rs2)] & 0x1F),
+    sra:  (c,a) => c.registers[R(a.args.rd)] = c.registers[R(a.args.rs1)] >> (c.registers[R(a.args.rs2)] & 0x1F),
+
+    // I-type
+    addi: (c,a) => c.registers[R(a.args.rd)] = c.registers[R(a.args.rs1)] + a.args.imm,
+    andi: (c,a) => c.registers[R(a.args.rd)] = c.registers[R(a.args.rs1)] & a.args.imm,
+    ori:  (c,a) => c.registers[R(a.args.rd)] = c.registers[R(a.args.rs1)] | a.args.imm,
+    xori: (c,a) => c.registers[R(a.args.rd)] = c.registers[R(a.args.rs1)] ^ a.args.imm,
+    slti: (c,a) => c.registers[R(a.args.rd)] = (c.registers[R(a.args.rs1)] < a.args.imm) ? 1 : 0,
+    sltui:(c,a) => c.registers[R(a.args.rd)] = ((c.registers[R(a.args.rs1)]>>>0) < (a.args.imm>>>0)) ? 1 : 0,
+    slli: (c,a) => c.registers[R(a.args.rd)] = c.registers[R(a.args.rs1)] << (a.args.imm & 0x1F),
+    srli: (c,a) => c.registers[R(a.args.rd)] = c.registers[R(a.args.rs1)] >>> (a.args.imm & 0x1F),
+    srai: (c,a) => c.registers[R(a.args.rd)] = c.registers[R(a.args.rs1)] >> (a.args.imm & 0x1F),
+
+    // LOAD
+    lw: (c,a) => {
+        const addr = c.registers[R(a.args.base)] + a.args.offset;
+        const dv = new DataView(c.mem);
+        c.registers[R(a.args.rd)] = dv.getInt32(addr, true);
+    },
+
+    // STORE
+    sw: (c,a) => {
+        const addr = c.registers[R(a.args.base)] + a.args.offset;
+        const dv = new DataView(c.mem);
+        dv.setInt32(addr, c.registers[R(a.args.rs2)], true);
+    },
+
+    // BRANCH
+    beq: (c,a) => { if(c.registers[R(a.args.rs1)] === c.registers[R(a.args.rs2)]) { c.pc += a.args.imm; c.pcChanged = true; } },
+    bne: (c,a) => { if(c.registers[R(a.args.rs1)] !== c.registers[R(a.args.rs2)]) { c.pc += a.args.imm; c.pcChanged = true; } },
+    blt: (c,a) => { if(c.registers[R(a.args.rs1)] < c.registers[R(a.args.rs2)]) { c.pc += a.args.imm; c.pcChanged = true; } },
+    bge: (c,a) => { if(c.registers[R(a.args.rs1)] >= c.registers[R(a.args.rs2)]) { c.pc += a.args.imm; c.pcChanged = true; } },
+    bltu:(c,a) => { if((c.registers[R(a.args.rs1)]>>>0) < (c.registers[R(a.args.rs2)]>>>0)) { c.pc += a.args.imm; c.pcChanged = true; } },
+    bgeu:(c,a) => { if((c.registers[R(a.args.rs1)]>>>0) >= (c.registers[R(a.args.rs2)]>>>0)) { c.pc += a.args.imm; c.pcChanged = true; } },
+};
+
+// Crear CPU
+function createCPU(programJSON) {
+    return {
+        registers: new Int32Array(32),
+        pc: 0,
+        mem: new ArrayBuffer(64*1024),
+        halted: false,
+        ir: programJSON.instructions,
+        labels: programJSON.labels
+    };
+}
+
+// Convertir "x10" -> 10
+function R(x){ return parseInt(x.replace("x","")); }
+
+// Ejecutar un paso
+function step(cpu) {
+    if(cpu.halted) return;
+
+    const ins = cpu.ir[cpu.pc / 4];
+    if(!ins) { cpu.halted = true; return; }
+
+    cpu.pcChanged = false;
+
+    const exec = EXEC_TABLE[ins.mnemonic];
+    if(!exec) throw new Error("Instrucción no implementada: " + ins.mnemonic);
+
+    const oldRegs = Array.from(cpu.registers);
+    
+    exec(cpu, ins);
+
+    cpu.registers[0] = 0;
+
+    if(!cpu.pcChanged) cpu.pc += 4;
+    console.group(`PC=${cpu.pc - 4} -> ${ins.mnemonic}`);
+    console.log("Instrucción:", ins);
+    console.log("Registros antes:", oldRegs);
+    console.log("Registros después:", Array.from(cpu.registers));
+    console.groupEnd();
+}
+
+
+function run(cpu, maxSteps=100000) {
+    for(let i=0;i<maxSteps && !cpu.halted;i++) step(cpu);
+}
+
+document.querySelector('.step').addEventListener('click', () => step(cpu));

@@ -52,11 +52,11 @@ const ISA_RULES = {
     andi: { fmt: 'I', args: ['rd', 'rs1', 'imm'] },
     ori:  { fmt: 'I', args: ['rd', 'rs1', 'imm'] },
     xori: { fmt: 'I', args: ['rd', 'rs1', 'imm'] },
-    slti: { fmt: 'R', args: ['rd', 'rs1', 'imm'] },
-    sltui:{ fmt: 'R', args: ['rd', 'rs1', 'imm'] },
-    slli: { fmt: 'R', args: ['rd', 'rs1', 'imm'] },
-    srli: { fmt: 'R', args: ['rd', 'rs1', 'imm'] },
-    srai: { fmt: 'R', args: ['rd', 'rs1', 'imm'] },
+    slti: { fmt: 'I', args: ['rd', 'rs1', 'imm'] },
+    sltui:{ fmt: 'I', args: ['rd', 'rs1', 'imm'] },
+    slli: { fmt: 'I', args: ['rd', 'rs1', 'imm'] },
+    srli: { fmt: 'I', args: ['rd', 'rs1', 'imm'] },
+    srai: { fmt: 'I', args: ['rd', 'rs1', 'imm'] },
 
     //Loads: rd, offset(base)
     lw:   { fmt: 'Ild', args: ['rd', 'offset'] },
@@ -282,7 +282,7 @@ function resolveLabels(ir) {
             if (labelPos[node.label] !== undefined) {
                 throw new Error(`Etiqueta duplicada '${node.label}'`);
             }
-            labelPos[node.label] = pcIndex * 4;
+            labelPos[node.label] = pcIndex * 4;     //Cambiar si es que se va a manejar de 1 por 1
 
         } else if (node.type === 'instr') {
 
@@ -290,10 +290,10 @@ function resolveLabels(ir) {
                 if (labelPos[node.label] !== undefined) {
                     throw new Error(`Etiqueta duplicada '${node.label}'`);
                 }
-                labelPos[node.label] = pcIndex * 4;
+                labelPos[node.label] = pcIndex * 4;     //Cambiar si es que se va a manejar de 1 por 1
             }
 
-            node.addr = pcIndex * 4;
+            node.addr = pcIndex * 4;        //Cambiar si es que se va a manejar de 1 por 1
             pcIndex++;
         }
     }
