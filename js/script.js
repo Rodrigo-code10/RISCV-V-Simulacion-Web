@@ -1331,6 +1331,8 @@ function step(cpu) {
     const ins = cpu.ir[cpu.pc / 4];
     if(!ins) { cpu.halted = true; return; }
 
+    activateInstruction(ins.format);
+
     cpu.pcChanged = false;
 
     const exec = EXEC_TABLE[ins.mnemonic];
@@ -1355,4 +1357,15 @@ function run(cpu, maxSteps=100000) {
     for(let i=0;i<maxSteps && !cpu.halted;i++) step(cpu);
 }
 
+
 document.querySelector('.step').addEventListener('click', () => step(cpu));
+
+
+
+//Para el uso de lo botones
+document.querySelector('.r-btn').addEventListener('click', () => activateInstruction('R'));
+document.querySelector('.i-btn').addEventListener('click', () => activateInstruction('I'));
+document.querySelector('.l-btn').addEventListener('click', () => activateInstruction('L'));
+document.querySelector('.s-btn').addEventListener('click', () => activateInstruction('S'));
+document.querySelector('.b-btn').addEventListener('click', () => activateInstruction('B'));
+document.querySelector('.reset-btn').addEventListener('click', () => resetAll());
