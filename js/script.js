@@ -32,8 +32,7 @@ const instructionPaths = {
                     { x: 630, y: 85 },
                     { x: 630, y: 430 },
                     { x: 420, y: 430 },
-                    { x: 420, y: 373 },
-                    { x: 440, y: 373 }
+                    { x: 420, y: 376 }
                 ]
             },
             // Memoria Programa -> Decodificador
@@ -146,8 +145,8 @@ const instructionPaths = {
                 from: 'control-unit', fromPort: 'cu_out1',
                 to: 'reg-bank', toPort: 'reg_write',
                 waypoints: [
-                    { x: 720, y: 473 },
-                    { x: 483, y: 473 }
+                    { x: 720, y: 477 },
+                    { x: 483, y: 477 }
                 ]
             },
             // Unidad Control -> MUX d1 (ALUSrc)
@@ -165,7 +164,7 @@ const instructionPaths = {
                 from: 'control-unit', fromPort: 'cu_out3',
                 to: 'mux-wb', toPort: 'wb_control',
                 waypoints: [
-                    { x: 720, y: 522 },
+                    { x: 720, y: 523 },
                     { x: 720, y: 580 },
                     { x: 1040, y: 580 },
                     { x: 1040, y: 419 }
@@ -176,8 +175,8 @@ const instructionPaths = {
                 from: 'control-unit', fromPort: 'cu_out4',
                 to: 'alu', toPort: 'alu_control',
                 waypoints: [
-                    { x: 880, y: 473 },
-                    { x: 900, y: 473 },
+                    { x: 880, y: 477 },
+                    { x: 900, y: 477 },
                     { x: 900, y: 380 },
                     { x: 850, y: 380 }
                 ]
@@ -309,8 +308,7 @@ const instructionPaths = {
                     { x: 630, y: 85 },
                     { x: 630, y: 430 },
                     { x: 420, y: 430 },
-                    { x: 420, y: 373 },
-                    { x: 440, y: 373 }
+                    { x: 420, y: 376 }
                 ]
             },
             // Sign Extend -> MUX d1
@@ -364,8 +362,8 @@ const instructionPaths = {
                 from: 'control-unit', fromPort: 'cu_out1',
                 to: 'reg-bank', toPort: 'reg_write',
                 waypoints: [
-                    { x: 720, y: 473 },
-                    { x: 483, y: 473 }
+                    { x: 720, y: 477 },
+                    { x: 483, y: 477 }
                 ]
             },
             // Unidad Control -> MUX d1 (ALUSrc)
@@ -383,7 +381,7 @@ const instructionPaths = {
                 from: 'control-unit', fromPort: 'cu_out3',
                 to: 'mux-wb', toPort: 'wb_control',
                 waypoints: [
-                    { x: 720, y: 522 },
+                    { x: 720, y: 523 },
                     { x: 720, y: 580 },
                     { x: 1040, y: 580 },
                     { x: 1040, y: 419 }
@@ -394,8 +392,8 @@ const instructionPaths = {
                 from: 'control-unit', fromPort: 'cu_out4',
                 to: 'alu', toPort: 'alu_control',
                 waypoints: [
-                    { x: 880, y: 473 },
-                    { x: 900, y: 473 },
+                    { x: 880, y: 477 },
+                    { x: 900, y: 477 },
                     { x: 900, y: 380 },
                     { x: 850, y: 380 }
                 ]
@@ -517,8 +515,7 @@ const instructionPaths = {
                     { x: 630, y: 85 },
                     { x: 630, y: 430 },
                     { x: 420, y: 430 },
-                    { x: 420, y: 373 },
-                    { x: 440, y: 373 }
+                    { x: 420, y: 376 }
                 ]
             },
             // Sign Extend -> MUX d1
@@ -596,8 +593,8 @@ const instructionPaths = {
                 from: 'control-unit', fromPort: 'cu_out1',
                 to: 'reg-bank', toPort: 'reg_write',
                 waypoints: [
-                    { x: 720, y: 473 },
-                    { x: 483, y: 473 }
+                    { x: 720, y: 477 },
+                    { x: 483, y: 477 }
                 ]
             },
             // Unidad Control -> MUX d1 (ALUSrc)
@@ -626,7 +623,7 @@ const instructionPaths = {
                 from: 'control-unit', fromPort: 'cu_out3',
                 to: 'mux-wb', toPort: 'wb_control',
                 waypoints: [
-                    { x: 720, y: 522 },
+                    { x: 720, y: 523 },
                     { x: 720, y: 580 },
                     { x: 1040, y: 580 },
                     { x: 1040, y: 419 }
@@ -637,8 +634,8 @@ const instructionPaths = {
                 from: 'control-unit', fromPort: 'cu_out4',
                 to: 'alu', toPort: 'alu_control',
                 waypoints: [
-                    { x: 880, y: 473 },
-                    { x: 900, y: 473 },
+                    { x: 880, y: 477 },
+                    { x: 900, y: 477 },
                     { x: 900, y: 380 },
                     { x: 850, y: 380 }
                 ]
@@ -836,8 +833,8 @@ const instructionPaths = {
                 from: 'control-unit', fromPort: 'cu_out6',
                 to: 'mem-data', toPort: 'mem_write',
                 waypoints: [
-                    { x: 880, y: 527 },
-                    { x: 950, y: 527 },
+                    { x: 880, y: 523 },
+                    { x: 950, y: 523 },
                     { x: 950, y: 40 },
                     { x: 1009, y: 40}
                 ]
@@ -847,8 +844,8 @@ const instructionPaths = {
                 from: 'control-unit', fromPort: 'cu_out4',
                 to: 'alu', toPort: 'alu_control',
                 waypoints: [
-                    { x: 880, y: 473 },
-                    { x: 900, y: 473 },
+                    { x: 880, y: 477 },
+                    { x: 900, y: 477 },
                     { x: 900, y: 380 },
                     { x: 850, y: 380 }
                 ]
@@ -917,9 +914,9 @@ const instructionPaths = {
                 to: 'sum-branch', toPort: 'offset_branch',
                 waypoints: [
                     { x: 270, y: 250 },
-                    { x: 270, y: 255 },
-                    { x: 350, y: 255 },
-                    { x: 350, y: 295 }
+                    { x: 270, y: 270 },
+                    { x: 350, y: 270 },
+                    { x: 350, y: 315 }
                 ]
             },
             // Memoria Programa -> Decodificador
@@ -963,8 +960,8 @@ const instructionPaths = {
                 from: 'control-unit', fromPort: 'cu_out1',
                 to: 'and-gate', toPort: 'and_in1',
                 waypoints: [
-                    { x: 720, y: 473 },
-                    { x: 170, y: 473 },
+                    { x: 720, y: 476 },
+                    { x: 170, y: 476 },
                     { x: 170, y: 303 }
                 ]
             },
@@ -1055,8 +1052,8 @@ const instructionPaths = {
                 from: 'control-unit', fromPort: 'cu_out4',
                 to: 'alu', toPort: 'alu_control',
                 waypoints: [
-                    { x: 880, y: 473 },
-                    { x: 900, y: 473 },
+                    { x: 880, y: 477 },
+                    { x: 900, y: 477 },
                     { x: 900, y: 380 },
                     { x: 850, y: 380 }
                 ]
