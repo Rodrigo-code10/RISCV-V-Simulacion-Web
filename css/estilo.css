@@ -585,7 +585,6 @@ body {
     box-shadow: 0 4px 20px rgba(224, 91, 73, 0.4);
 }
 
-/* ETIQUETAS DE PUERTOS - Solo visuales, sin JS */
 .port::after {
     content: attr(data-port);
     position: absolute;
@@ -604,12 +603,10 @@ body {
     transition: opacity 0.3s ease;
 }
 
-/* Mostrar etiquetas al hacer hover sobre la caja */
 .box:hover .port::after {
     opacity: 1;
 }
 
-/* Posicionamiento de etiquetas según ubicación del puerto */
 .port-left::after {
     right: 100%;
     top: 50%;
@@ -638,32 +635,27 @@ body {
     margin-top: 5px;
 }
 
-.port.active-r::after {
+.box:hover .port.active-r::after {
     background: rgba(255, 0, 0, 0.9);
     border-color: #ff0000;
-    opacity: 1;
 }
 
-.port.active-i::after {
+.box:hover .port.active-i::after {
     background: rgba(0, 128, 255, 0.9);
     border-color: #0080ff;
-    opacity: 1;
 }
 
-.port.active-l::after {
+.box:hover .port.active-l::after {
     background: rgba(0, 255, 0, 0.9);
     border-color: #00ff00;
-    opacity: 1;
 }
 
-.port.active-s::after {
+.box:hover .port.active-s::after {
     background: rgba(255, 128, 0, 0.9);
     border-color: #ff8000;
-    opacity: 1;
 }
 
-.port.active-b::after {
+.box:hover .port.active-b::after {
     background: rgba(255, 0, 255, 0.9);
     border-color: #ff00ff;
-    opacity: 1;
 }
