@@ -102,6 +102,7 @@ body {
     display: flex;
     height: calc(100vh - 110px);
     overflow: hidden;
+    animation: fadeIn 0.4s ease;
 }
 
 .side-panel-left {
@@ -119,6 +120,17 @@ body {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .code-display {
@@ -583,6 +595,48 @@ body {
 .clickable-box:hover {
     transform: scale(1.05);
     box-shadow: 0 4px 20px rgba(224, 91, 73, 0.4);
+}
+
+.code-line {
+    padding: 8px 12px;
+    transition: color 0.3s ease;
+    font-family: 'Courier New', monospace;
+    color: #555;
+    background: transparent;
+}
+
+.code-line.highlight-line {
+    color: #00FF7F;
+    font-weight: bold;
+    text-shadow: 
+        0 0 5px rgba(0, 255, 127, 0.8),
+        0 0 10px rgba(0, 255, 127, 0.6),
+        0 0 15px rgba(0, 255, 127, 0.4),
+        0 0 20px rgba(0, 255, 127, 0.3);
+    animation: text-glow-green 1.5s ease-in-out infinite;
+}
+
+@keyframes text-glow-green {
+    0%, 100% {
+        text-shadow: 
+            0 0 5px rgba(0, 255, 127, 0.8),
+            0 0 10px rgba(0, 255, 127, 0.6),
+            0 0 15px rgba(0, 255, 127, 0.4),
+            0 0 20px rgba(0, 255, 127, 0.3);
+        color: #00FF7F;
+    }
+    50% {
+        text-shadow: 
+            0 0 8px rgba(0, 255, 127, 1),
+            0 0 15px rgba(0, 255, 127, 0.8),
+            0 0 22px rgba(0, 255, 127, 0.6),
+            0 0 30px rgba(0, 255, 127, 0.4);
+        color: #00FFA3;
+    }
+}
+
+.code-content {
+    scroll-behavior: smooth;
 }
 
 .port::after {

@@ -1,3 +1,39 @@
+(function(){
+    let tc = document.getElementById("toast-container");
+    if (!tc) {
+        tc = document.createElement("div");
+        tc.id = "toast-container";
+        tc.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column-reverse;
+            gap: 10px;
+            z-index: 99999;
+        `;
+        document.body.appendChild(tc);
+    }
+})();
+
+// Notificaciones apilables
+function mostrarMensaje(mensaje, color) {
+    const div = document.createElement('div');
+    div.textContent = mensaje;
+    div.style.cssText = `
+        padding: 12px 20px;
+        border-radius: 6px;
+        color: white;
+        background: ${color};
+        font-family: monospace;
+        box-shadow: 0 0 10px rgba(0,0,0,.25);
+        animation: fadeIn .25s ease-out, fadeOut .25s ease-out 2.5s forwards;
+    `;
+    document.getElementById("toast-container").appendChild(div);
+    setTimeout(() => div.remove(), 3000);
+}
+
+
 const instructionPaths = {
     R: {
         color: 'r',
@@ -1224,17 +1260,71 @@ function resetAll() {
     document.querySelectorAll('[id^="line-active-"]').forEach(line => line.remove());
 }
 
+function resetCPUState(cpu) {
+    cpu.pc = 0;
+    cpu.halted = false;
+    cpu.pcChanged = false;
+
+    // reiniciar registros
+    cpu.registers.fill(0);
+}
+
+function stopRun() {
+    isRunning = false;
+
+    if (runInterval) {
+        clearInterval(runInterval);
+        runInterval = null;
+    }
+
+    if (runTimeout) {
+        clearTimeout(runTimeout);
+        runTimeout = null;
+    }
+}
+
+function resetExecution(cpu) {
+    resetAll();
+
+    isAnimating = false;
+    animationTimeout && clearTimeout(animationTimeout);
+    animationTimeout = null;
+
+    resetCPUState(cpu);
+    resetAll();
+    console.log("RESET COMPLETO");
+}
+
 function loadCodeFromStorage() {
     const savedCode = localStorage.getItem('assemblyCode');
     const codeViewer = document.getElementById('code-viewer');
     
     if (savedCode && savedCode.trim() !== '') {
         const lines = savedCode.split('\n');
-        codeViewer.innerHTML = lines
-            .map(line => `<div class="code-line">${line || '&nbsp;'}</div>`)
+        const currentHTML = codeViewer.innerHTML;
+        const newHTML = lines
+            .map((line, index) => `<div class="code-line" data-line="${index}">${line || '&nbsp;'}</div>`)
             .join('');
+        
+        if (currentHTML !== newHTML && !currentHTML.includes('code-line')) {
+            codeViewer.innerHTML = newHTML;
+        }
     } else {
         codeViewer.innerHTML = '<p class="code-placeholder">No hay código disponible</p>';
+    }
+}
+
+function highlightCurrentLine() {
+    document.querySelectorAll('.code-line').forEach(line => {
+        line.classList.remove('highlight-line');
+    });
+    
+    const currentInstructionIndex = cpu.pc / 4;
+    
+    const currentLine = document.querySelector(`.code-line[data-line="${currentInstructionIndex}"]`);
+    if (currentLine) {
+        currentLine.classList.add('highlight-line');
+        currentLine.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 }
 
@@ -1246,6 +1336,7 @@ window.addEventListener('load', () => {
     drawAllStaticConnections();
     document.querySelectorAll('.box').forEach(box => box.classList.add('pulsing'));
     loadCodeFromStorage();
+    setTimeout(() => highlightCurrentLine(), 100);
 });
 
 setInterval(loadCodeFromStorage, 1000);
@@ -1316,12 +1407,24 @@ function createCPU(programJSON) {
 
 function R(x){ return parseInt(x.replace("x","")); }
 
+let isAnimating = false; 
 function step(cpu) {
-    if(cpu.halted) return;
+    if (cpu.halted) {
+        mostrarMensaje("Ejecución completada", "#C2AF30");
+        return Promise.resolve();
+    }
 
+    if (isAnimating) return Promise.resolve();
     const ins = cpu.ir[cpu.pc / 4];
-    if(!ins) { cpu.halted = true; return; }
 
+    if (!ins) {
+        cpu.halted = true;
+        mostrarMensaje("Ejecución completada", "#C2AF30");
+        return Promise.resolve();
+    }
+
+    isAnimating = true;
+    highlightCurrentLine();
     activateInstruction(ins.format);
 
     cpu.pcChanged = false;
@@ -1330,31 +1433,46 @@ function step(cpu) {
     if(!exec) throw new Error("Instrucción no implementada: " + ins.mnemonic);
 
     const oldRegs = Array.from(cpu.registers);
-    
     exec(cpu, ins);
-
     cpu.registers[0] = 0;
-
     if(!cpu.pcChanged) cpu.pc += 4;
-    console.group(`PC=${cpu.pc - 4} -> ${ins.mnemonic}`);
-    console.log("Instrucción:", ins);
-    console.log("Registros antes:", oldRegs);
-    console.log("Registros después:", Array.from(cpu.registers));
-    console.groupEnd();
+
+    const config = instructionPaths[ins.format];
+    const animationDuration = config ? config.connections.length * 300 : 300;
+
+    return new Promise(resolve => {
+        setTimeout(() => {
+            isAnimating = false;
+            resolve();   
+        }, animationDuration);
+    });
+}
+function delay(ms) {
+    return new Promise(res => setTimeout(res, ms));
 }
 
-function run(cpu, maxSteps=100000) {
-    for(let i=0;i<maxSteps && !cpu.halted;i++) step(cpu);
+async function run(cpu, maxSteps = 100000) {
+    const extraDelay = 900;
+
+    for (let i = 0; i < maxSteps && !cpu.halted; i++) {
+        await step(cpu);     
+        await delay(extraDelay); 
+    }
+
+    if (cpu.halted) {
+        mostrarMensaje("Ejecución completada", "#C2AF30");
+    }
 }
 
 document.querySelector('.step').addEventListener('click', () => step(cpu));
+document.querySelector('.run').addEventListener('click', () => run(cpu));
 
 document.querySelector('.r-btn').addEventListener('click', () => activateInstruction('R'));
 document.querySelector('.i-btn').addEventListener('click', () => activateInstruction('I'));
 document.querySelector('.l-btn').addEventListener('click', () => activateInstruction('L'));
 document.querySelector('.s-btn').addEventListener('click', () => activateInstruction('S'));
 document.querySelector('.b-btn').addEventListener('click', () => activateInstruction('B'));
-document.querySelector('.reset-btn').addEventListener('click', () => resetAll());
+document.querySelector('.reset-btn').addEventListener('click', () => resetExecution(cpu));
 
 const modalConfigs = {
     'pc': {

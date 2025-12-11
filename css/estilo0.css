@@ -102,6 +102,7 @@ body {
     margin: 0 auto;
     padding: 30px;
 }
+
 .tab-view {
     display: none;
     animation: fadeIn 0.4s ease;
