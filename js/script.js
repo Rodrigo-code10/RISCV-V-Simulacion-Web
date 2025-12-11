@@ -1210,7 +1210,6 @@ function drawAllStaticConnections() {
 }
 
 function activateInstruction(instruction) {
-    if (activeInstruction === instruction) return;
     
     resetAll();
     activeInstruction = instruction;
@@ -1256,7 +1255,7 @@ function animateConnection(config) {
     }
     
     currentConnectionIndex++;
-    animationTimeout = setTimeout(() => animateConnection(config), 300);
+    animationTimeout = setTimeout(() => animateConnection(config), 100);
 }
 
 function resetAll() {
