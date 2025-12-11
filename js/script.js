@@ -1336,11 +1336,23 @@ function highlightCurrentLine() {
     });
     
     const currentInstructionIndex = cpu.pc / 4;
+    const allLines = document.querySelectorAll('.code-line');
+    let instructionCounter = 0;
     
-    const currentLine = document.querySelector(`.code-line[data-line="${currentInstructionIndex}"]`);
-    if (currentLine) {
-        currentLine.classList.add('highlight-line');
-        currentLine.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    for (let line of allLines) {
+        const lineText = line.textContent.trim();
+        
+        if (lineText === '' || lineText.endsWith(':')) {
+            continue;
+        }
+        
+        if (instructionCounter === currentInstructionIndex) {
+            line.classList.add('highlight-line');
+            line.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            break;
+        }
+        
+        instructionCounter++;
     }
 }
 
