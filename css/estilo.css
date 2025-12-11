@@ -5,6 +5,7 @@
     --text-primary: #ffffff;
     --text-secondary: #b0b0b0;
     --border-color: rgba(255, 255, 255, 0.1);
+    --schematic-offset: 190px;
 }
 
 * {
@@ -176,8 +177,16 @@ body {
     position: relative;
     overflow: auto;
     padding: 50px;
-    padding-left: 100px;
-    transform: translateX(110px); /*muevelo aqui*/
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.schematic-wrapper {
+    position: relative;
+    transform-origin: top center;
+    width: 1200px;
+    min-height: 600px;
 }
 
 #connections-svg {
@@ -712,4 +721,44 @@ body {
 .box:hover .port.active-b::after {
     background: rgba(255, 0, 255, 0.9);
     border-color: #ff00ff;
+}
+
+@media (min-width: 2560px) {
+    .schematic-wrapper {
+        transform: scale(1.8);
+    }
+}
+
+@media (min-width: 1920px) and (max-width: 2559px) {
+    .schematic-wrapper {
+        transform: scale(1.2);
+    }
+}
+
+@media (min-width: 1600px) and (max-width: 1919px) {
+    .schematic-wrapper {
+        transform: scale(1);
+    }
+}
+
+@media (min-width: 1440px) and (max-width: 1599px) {
+    .schematic-wrapper {
+        transform: scale(0.7);
+    }
+}
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+    .schematic-wrapper {
+        transform: scale(0.6);
+    }
+}
+
+@media (max-width: 1023px) {
+    .schematic-wrapper {
+        transform: scale(0.4);
+    }
+    
+    .container {
+        padding: 20px;
+    }
 }

@@ -1126,19 +1126,38 @@ let animationTimeout = null;
 let currentConnectionIndex = 0;
 let staticConnectionCounter = 0;
 
+function getScale() {
+    const wrapper = document.querySelector('.schematic-wrapper');
+    if (!wrapper) return 1;
+    
+    const style = window.getComputedStyle(wrapper);
+    const matrix = style.transform;
+    
+    if (matrix === 'none') return 1;
+    
+    const values = matrix.split('(')[1].split(')')[0].split(',');
+    return parseFloat(values[0]) || 1;
+}
+
 function getPortPosition(boxId, portName) {
     const box = document.getElementById(boxId);
     if (!box) return null;
 
-    const container = document.querySelector('.container');
-    const containerRect = container.getBoundingClientRect();
+    const wrapper = document.querySelector('.schematic-wrapper');
     const port = box.querySelector(`[data-port="${portName}"]`);
 
-    if (port) {
+    if (port && wrapper) {
+        const wrapperRect = wrapper.getBoundingClientRect();
         const portRect = port.getBoundingClientRect();
+        const scale = getScale();
+        
+        // Calcular la posición relativa al wrapper (antes del escalado)
+        const relX = (portRect.left + portRect.width / 2 - wrapperRect.left) / scale;
+        const relY = (portRect.top + portRect.height / 2 - wrapperRect.top) / scale;
+        
         return {
-            x: portRect.left + portRect.width / 2 - containerRect.left + container.scrollLeft,
-            y: portRect.top + portRect.height / 2 - containerRect.top + container.scrollTop
+            x: relX,
+            y: relY
         };
     }
     return null;
@@ -1264,8 +1283,6 @@ function resetCPUState(cpu) {
     cpu.pc = 0;
     cpu.halted = false;
     cpu.pcChanged = false;
-
-    // reiniciar registros
     cpu.registers.fill(0);
 }
 
@@ -1329,7 +1346,10 @@ function highlightCurrentLine() {
 }
 
 window.addEventListener('resize', () => {
-    drawAllStaticConnections();
+    clearTimeout(window.resizeTimer);
+    window.resizeTimer = setTimeout(() => {
+        drawAllStaticConnections();
+    }, 250);
 });
 
 window.addEventListener('load', () => {
@@ -1447,6 +1467,7 @@ function step(cpu) {
         }, animationDuration);
     });
 }
+
 function delay(ms) {
     return new Promise(res => setTimeout(res, ms));
 }
@@ -1487,8 +1508,6 @@ const modalConfigs = {
                         <p style="margin: 0;"><strong>Valor actual:</strong> <span style="color: #4CAF50;">${cpu.pc}</span></p>
                         <p style="margin: 10px 0 0 0;"><strong>En hexadecimal:</strong> <span style="color: #4CAF50;">0x${cpu.pc.toString(16).toUpperCase().padStart(8, '0')}</span></p>
                     </div>
-                    
-                    <!-- Aquí puedes agregar más código según necesites -->
                 </div>
             `;
         }
@@ -1518,8 +1537,6 @@ const modalConfigs = {
                     <div style="max-height: 400px; overflow-y: auto;">
                         ${registersHTML}
                     </div>
-                    
-                    <!-- Aquí puedes agregar más código según necesites -->
                 </div>
             `;
         }
@@ -1558,8 +1575,6 @@ const modalConfigs = {
                     <div style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 8px; border: 1px solid #444; max-height: 400px; overflow-y: auto;">
                         ${memHTML}
                     </div>
-                    
-                    <!-- Aquí puedes agregar más código según necesites -->
                 </div>
             `;
         }
