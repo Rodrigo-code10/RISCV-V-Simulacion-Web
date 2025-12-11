@@ -59,7 +59,7 @@ const ISA_RULES = {
     srai: { fmt: 'I', args: ['rd', 'rs1', 'imm'] },
 
     //Loads: rd, offset(base)
-    lw:   { fmt: 'Ild', args: ['rd', 'offset'] },
+    lw:   { fmt: 'L', args: ['rd', 'offset'] },
 
     //Stores: rs2, offset(base)
     sw:   { fmt: 'S', args: ['rs2', 'offset'] },
