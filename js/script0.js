@@ -436,3 +436,10 @@ btnSimulador.addEventListener("click", () => {
     }
     window.location.href = 'index.html';
 });
+
+
+const btnAcerca = document.getElementById("tab-acerca");
+btnAcerca.addEventListener("click", () => {
+    console.log("Botón acerca clickeado");
+    window.location.href = 'index2.html';
+});

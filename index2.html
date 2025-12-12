@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RISC-V Simulator - Acerca de</title>
+    <link rel="stylesheet" href="css/estilo2.css">
+</head>
+<body>
+    <div class="header-container">
+        <div class="header-content">
+            <h1 class="title">RISC-V Simulator</h1>
+            <div class="tabs">
+                <button class="tab" onclick="window.location.href='index0.html'">
+                    <span class="tab-icon"></span>Código en Ensamblador 
+                </button>
+                <button class="tab" onclick="window.location.href='index.html'">
+                    <span class="tab-icon"></span>Esquemático Procesador
+                </button>
+                <button class="tab activa">
+                    <span class="tab-icon"></span>Acerca de nosotros
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="docs-container">
+            
+            <div class="tabs-docs">
+                <button class="tab-btn active" onclick="showTab(event, 'about')">Acerca de</button>
+                <button class="tab-btn" onclick="showTab(event, 'guia')">Guía de Uso</button>
+                <button class="tab-btn" onclick="showTab(event, 'instrucciones')">Instrucciones</button>
+                <button class="tab-btn" onclick="showTab(event, 'equipo')">Equipo</button>
+            </div>
+
+            <!-- TAB: ACERCA DE -->
+            <div id="about" class="tab-content active">
+                <div class="about-section">
+                    <h2>RISC-V Simulator</h2>
+                    <p>RISC-V Simulator es una herramienta educativa diseñada para ayudarte a comprender y practicar programación en lenguaje ensamblador <strong>RISC-V</strong>. Permite escribir código, visualizar la ejecución y entender cómo funciona el procesador a nivel de arquitectura.</p>
+                </div>
+
+                <div class="about-section">
+                    <h2>Características Principales</h2>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4>Editor de código ensamblador</h4>
+                            <p>Editor de código con numeración de líneas, validación sintáctica en tiempo real y almacenamiento automático.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>Visualización del Procesador</h4>
+                            <p>Diagrama interactivo del esquemático que muestra cómo fluyen los datos a través de los componentes.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>Ejecución Paso a Paso</h4>
+                            <p>Ejecuta instrucciones individuales y observa cómo cambia el estado de registros y memoria.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>Monitoreo de Estado</h4>
+                            <p>Visualiza el Program Counter, registros, memoria de datos y otros componentes en tiempo real.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>Sistema de Etiquetas</h4>
+                            <p>Soporta etiquetas para crear saltos y bucles de forma legible y funcional.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4>Animaciones Educativas</h4>
+                            <p>Las conexiones entre componentes se animan para ilustrar el flujo de datos en cada instrucción.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="about-section">
+                    <h2>Recursos</h2>
+                    <p><strong>Última actualización:</strong> Diciembre 2025</p>
+                    <p><strong>Documentación académica:</strong> Los recursos proporcionados para la comprensión fueron elaborados por el Dr. José Antonio Juárez Abad</p>
+                </div>
+            </div>
+
+            <!-- TAB: GUÍA DE USO -->
+            <div id="guia" class="tab-content">
+                <div class="about-section">
+                    <h2>📖 Guía de Uso Rápida</h2>
+                    
+                    <h3>1. Escribir Código</h3>
+                    <p>Accede a la pestaña "Código en Ensamblador" y escribe tu programa RISC-V:</p>
+                    <div class="code-block">
+# Ejemplo: Sumar dos números <br>
+addi x1, x0, 10      # x1 = 10 <br>
+addi x2, x0, 20      # x2 = 20 <br>
+add  x3, x1, x2       # x3 = 30 <br>
+                    </div>
+
+                    <h3>2. Ensamblar</h3>
+                    <p>El código se valida automáticamente y verás notificaciones en verde si todo es correcto, o en rojo si hay errores.</p>
+
+                    <h3>3. Simular</h3>
+                    <p>En la pestaña "Esquemático Procesador" encontrarás:</p>
+                    <ul>
+                        <li><strong>Step:</strong> Ejecuta una instrucción y pausa</li>
+                        <li><strong>Run:</strong> Ejecuta automáticamente todo el programa</li>
+                        <li><strong>Reset:</strong> Reinicia el estado completo</li>
+
+
+                        <li><strong>Tipo R:</strong> Ejecuta instrucciones tipor R sin necesida de haber puesto código.</li>
+                        <li><strong>Tipo I:</strong> Ejecuta instrucciones tipor I sin necesida de haber puesto código.</li>
+                        <li><strong>Tipo L:</strong> Ejecuta instrucciones tipor L sin necesida de haber puesto código.</li>
+                        <li><strong>Tipo s:</strong> Ejecuta instrucciones tipor S sin necesida de haber puesto código.</li>
+                        <li><strong>Tipo B:</strong> Ejecuta instrucciones tipor B sin necesida de haber puesto código.</li>
+
+                    </ul>
+
+                    <h3>4. Inspeccionar</h3>
+                    <p>Haz clic en los componentes del diagrama para ver información detallada:</p>
+                    <ul>
+                        <li><strong>PC (Program Counter):</strong> Dirección actual de ejecución</li>
+                        <li><strong>Banco de Registros:</strong> Estado de los 32 registros</li>
+                        <li><strong>Memoria de Datos:</strong> Primeros 256 bytes de memoria</li>
+                    </ul>
+
+                    <h3>5. Ejemplos Útiles</h3>
+                    
+                    <h4>Bucle Simple</h4>
+                    <div class="code-block">
+addi x1, x0, 5       # contador = 5<br>
+loop: addi x1, x1, -1<br>
+    bne x1, x0, loop # repetir mientras x1 != 0
+                    </div>
+
+                    <h4>Carga y Almacenamiento</h4>
+                    <div class="code-block">
+addi x5, x0, 0       # dirección = 0<br>
+addi x6, x0, 100     # valor = 100<br>
+sw x6, 0(x5)         # guardar en memoria[0]<br>
+lw x7, 0(x5)         # cargar en x7<br>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: INSTRUCCIONES -->
+            <div id="instrucciones" class="tab-content">
+                <div class="about-section">
+                    <h2>Conjunto de Instrucciones Soportadas</h2>
+
+                    <h3>Formato R (Registro-Registro)</h3>
+                    <p>Operaciones entre tres registros. Formato: <code>op rd, rs1, rs2</code></p>
+                    <table class="instruction-table">
+                        <thead>
+                            <tr>
+                                <th>Instrucción</th>
+                                <th>Descripción</th>
+                                <th>Ejemplo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>add</code></td>
+                                <td>Suma: rd = rs1 + rs2</td>
+                                <td><code>add x3, x1, x2</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>sub</code></td>
+                                <td>Resta: rd = rs1 - rs2</td>
+                                <td><code>sub x3, x1, x2</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>and</code></td>
+                                <td>AND lógico: rd = rs1 & rs2</td>
+                                <td><code>and x3, x1, x2</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>or</code></td>
+                                <td>OR lógico: rd = rs1 | rs2</td>
+                                <td><code>or x3, x1, x2</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>xor</code></td>
+                                <td>XOR lógico: rd = rs1 ^ rs2</td>
+                                <td><code>xor x3, x1, x2</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>slt</code></td>
+                                <td>Menor que (signed): rd = (rs1 < rs2) ? 1 : 0</td>
+                                <td><code>slt x3, x1, x2</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>sltu</code></td>
+                                <td>Menor que (unsigned): rd = (rs1 < rs2) ? 1 : 0</td>
+                                <td><code>sltu x3, x1, x2</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>sll</code></td>
+                                <td>Desplazamiento izq: rd = rs1 << (rs2 & 0x1F)</td>
+                                <td><code>sll x3, x1, x2</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>srl</code></td>
+                                <td>Desplazamiento der lógico: rd = rs1 >> (rs2 & 0x1F)</td>
+                                <td><code>srl x3, x1, x2</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>sra</code></td>
+                                <td>Desplazamiento der aritmético: rd = rs1 >> (rs2 & 0x1F)</td>
+                                <td><code>sra x3, x1, x2</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Formato I (Inmediato)</h3>
+                    <p>Operaciones con constantes. Formato: <code>op rd, rs1, imm</code></p>
+                    <table class="instruction-table">
+                        <thead>
+                            <tr>
+                                <th>Instrucción</th>
+                                <th>Descripción</th>
+                                <th>Ejemplo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>addi</code></td>
+                                <td>Suma inmediata: rd = rs1 + imm</td>
+                                <td><code>addi x1, x1, 10</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>andi</code></td>
+                                <td>AND con inmediato: rd = rs1 & imm</td>
+                                <td><code>andi x3, x1, 0xFF</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>ori</code></td>
+                                <td>OR con inmediato: rd = rs1 | imm</td>
+                                <td><code>ori x3, x1, 0x01</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>xori</code></td>
+                                <td>XOR con inmediato: rd = rs1 ^ imm</td>
+                                <td><code>xori x3, x1, 0xFF</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>slti</code></td>
+                                <td>Menor que inmediato (signed)</td>
+                                <td><code>slti x3, x1, 100</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>sltui</code></td>
+                                <td>Menor que inmediato (unsigned)</td>
+                                <td><code>sltui x3, x1, 100</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>slli</code></td>
+                                <td>Desplazamiento izq inmediato: rd = rs1 << (imm & 0x1F)</td>
+                                <td><code>slli x3, x1, 2</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>srli</code></td>
+                                <td>Desplazamiento der lógico inmediato</td>
+                                <td><code>srli x3, x1, 2</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>srai</code></td>
+                                <td>Desplazamiento der aritmético inmediato</td>
+                                <td><code>srai x3, x1, 2</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Formato L (Load/Carga)</h3>
+                    <p>Carga datos desde memoria. Formato: <code>lw rd, offset(base)</code></p>
+                    <table class="instruction-table">
+                        <thead>
+                            <tr>
+                                <th>Instrucción</th>
+                                <th>Descripción</th>
+                                <th>Ejemplo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>lw</code></td>
+                                <td>Load Word: carga palabra (32 bits) de memoria</td>
+                                <td><code>lw x1, 0(x5)</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Formato S (Store/Almacenamiento)</h3>
+                    <p>Guarda datos en memoria. Formato: <code>sw rs2, offset(base)</code></p>
+                    <table class="instruction-table">
+                        <thead>
+                            <tr>
+                                <th>Instrucción</th>
+                                <th>Descripción</th>
+                                <th>Ejemplo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>sw</code></td>
+                                <td>Store Word: guarda palabra (32 bits) en memoria</td>
+                                <td><code>sw x1, 0(x5)</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Formato B (Branch/Saltos Condicionales)</h3>
+                    <p>Saltos condicionales. Formato: <code>op rs1, rs2, label(etiqueta)</code></p>
+                    <table class="instruction-table">
+                        <thead>
+                            <tr>
+                                <th>Instrucción</th>
+                                <th>Descripción</th>
+                                <th>Ejemplo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>beq</code></td>
+                                <td>Salta si igual: PC += imm si rs1 == rs2</td>
+                                <td><code>beq x1, x2, fin</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>bne</code></td>
+                                <td>Salta si no igual: PC += imm si rs1 != rs2</td>
+                                <td><code>bne x1, x0, loop</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>blt</code></td>
+                                <td>Salta si menor (signed): PC += imm si rs1 < rs2</td>
+                                <td><code>blt x1, x2, menor</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>bge</code></td>
+                                <td>Salta si mayor o igual (signed): PC += imm si rs1 >= rs2</td>
+                                <td><code>bge x1, x2, mayor</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>bltu</code></td>
+                                <td>Salta si menor (unsigned): PC += imm si rs1 < rs2</td>
+                                <td><code>bltu x1, x2, menor</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>bgeu</code></td>
+                                <td>Salta si mayor o igual (unsigned): PC += imm si rs1 >= rs2</td>
+                                <td><code>bgeu x1, x2, mayor</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB: EQUIPO -->
+            <div id="equipo" class="tab-content">
+                <div class="about-section">
+                    <h2>Equipo de Desarrollo</h2>
+                    <p>RISC-V Simulator fue desarrollado como proyecto educativo por estudiantes de Ingeniería en Computación de la Universidad Tecnologíca de la Mixteca, bajo la supervisión del Dr. José Antonio Juárez Abad.</p>
+                    
+                    <div class="team-grid">
+                        <div class="team-member">
+                            <h3>García Santiago Rodrigo Rolando</h3>
+                        </div>
+                        <div class="team-member">
+                            <h3>Hernández de los Angeles Bryan Gregory</h3>
+                        </div>
+                        <div class="team-member">
+                            <h3>García Javier Jesús Emmanuel</h3>
+                        </div>
+                        <div class="team-member">
+                            <h3>Díaz Carbajal Josué</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="about-section">
+                    <h2>Objetivo del Proyecto</h2>
+                    <p>Este simulador fue creado como herramienta educativa para que estudiantes de Arquitectura de Computadores comprendan de forma práctica y visual cómo funciona un procesador RISC-V a nivel de hardware, facilitando el aprendizaje de conceptos fundamentales de arquitectura de computadores.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(event, tabName) {
+            // Ocultar todos los tabs
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // Desactivar todos los botones
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            // Mostrar el tab seleccionado
+            document.getElementById(tabName).classList.add('active');
+            
+            // Activar el botón correspondiente
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
